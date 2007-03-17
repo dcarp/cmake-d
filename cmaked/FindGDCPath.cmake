@@ -1,3 +1,13 @@
+#
+# CMakeD - CMake module for D Language
+#
+# Copyright (c) 2007, Selman Ulug <selman.ulug@gmail.com>
+# All rights reserved.
+#
+# See Copyright.txt for details.
+#
+
+
 # - Find GDC Include Path
 #
 #  GDC_INCLUDE_PATH = path to where object.d is found

@@ -1,0 +1,127 @@
+diff -Naur ../minwin_org/CMakeLists.txt minwin_gtk/CMakeLists.txt
+--- ../minwin_org/CMakeLists.txt	1970-01-01 00:00:00.000000000 +0000
++++ minwin_gtk/CMakeLists.txt	2007-03-10 08:54:43.000000000 +0000
+@@ -0,0 +1,31 @@
++SET(CMAKE_FIND_LIBRARY_PREFIXES "")
++SET(CMAKE_FIND_LIBRARY_SUFFIXES ".so")
++
++PROJECT (minwin_gtk D)
++
++FIND_PACKAGE (GTK2)
++
++IF (GTK2_FOUND)
++  
++  INCLUDE_DIRECTORIES ( ${GTK2_INCLUDE_DIRS} )
++  
++  
++  SET (SRCS
++    minwin/all.d        minwin/font.d       minwin/layout.d     minwin/peerimpl.d
++    minwin/app.d        minwin/geometry.d   minwin/listbox.d    minwin/scroll.d
++    minwin/button.d     minwin/group.d      minwin/logging.d    minwin/text.d
++    minwin/canvas.d     minwin/gtk.d        minwin/menu.d       minwin/unittest.d
++    minwin/combo.d      minwin/gtk_peers.d                      minwin/window.d
++    minwin/component.d  minwin/icon.d       minwin/multidg.d
++    minwin/dialog.d     minwin/image.d      minwin/paint.d
++    minwin/event.d      minwin/label.d      minwin/peer.d )
++  
++  ADD_DEFINITIONS (-fversion=GTK ${GTK2_DEFINITIONS})
++  
++  ADD_LIBRARY (minwin_gtk ${SRCS})
++  
++  TARGET_LINK_LIBRARIES (minwin_gtk ${GTK2_LIBRARIES})
++  
++  ADD_SUBDIRECTORY (minwin/samples)
++
++ENDIF (GTK2_FOUND)
+diff -Naur ../minwin_org/minwin/dialog.d minwin_gtk/minwin/dialog.d
+--- ../minwin_org/minwin/dialog.d	2007-03-15 14:30:47.000000000 +0000
++++ minwin_gtk/minwin/dialog.d	2007-03-09 20:32:38.000000000 +0000
+@@ -383,20 +383,21 @@
+     private import minwin.gtk;
+     private import minwin.window;
+ 
+-    void informationDialog(AbstractWindow owner, char[] text, char[] title) {
++    void informationDialog(AbstractWindow owner, char* text, char[] 
++title) {
+         msgDialog(owner,text,title,GtkMessageType.GTK_MESSAGE_INFO,
+                 GtkButtonsType.GTK_BUTTONS_OK);
+     }
+-    void warningDialog(AbstractWindow owner, char[] text, char[] title) {
++    void warningDialog(AbstractWindow owner, char* text, char[] title) {
+         msgDialog(owner,text,title,GtkMessageType.GTK_MESSAGE_WARNING,
+                 GtkButtonsType.GTK_BUTTONS_OK);
+     }
+-    void errorDialog(AbstractWindow owner, char[] text, char[] title) {
++    void errorDialog(AbstractWindow owner, char* text, char[] title) {
+         msgDialog(owner,text,title,GtkMessageType.GTK_MESSAGE_ERROR,
+                 GtkButtonsType.GTK_BUTTONS_OK);
+     }
+     alias informationDialog messageDialog;
+-    void msgDialog(AbstractWindow owner, char[] text, char[] title,
++    void msgDialog(AbstractWindow owner, char* text, char[] title,
+          GtkMessageType type, GtkButtonsType buttons) {
+         // TODO: title?
+         GtkWidget* d = gtk_message_dialog_new(owner.peer,
+@@ -440,7 +441,7 @@
+             GtkFileFilter* f = gtk_file_filter_new();
+             gtk_file_filter_set_name(f,toStringz(filt.description));
+             foreach( char[] ext; filt.extensions) {
+-                gtk_file_filter_add_pattern(f,"*."~ext);
++                gtk_file_filter_add_pattern(f,cast(char*)("*."~ext));
+             }
+             gtk_file_chooser_add_filter(fc,f);
+         }
+diff -Naur ../minwin_org/minwin/listbox.d minwin_gtk/minwin/listbox.d
+--- ../minwin_org/minwin/listbox.d	2007-03-15 14:30:47.000000000 +0000
++++ minwin_gtk/minwin/listbox.d	2007-03-09 20:09:04.000000000 +0000
+@@ -82,7 +82,7 @@
+                 args[0] = 0;
+                 args[1] = cast(int)toStringz(s);
+                 args[2] = -1;
+-                gtk_list_store_set_valist(model,&iter,args);
++                gtk_list_store_set_valist(model,&iter,&args);
+             }
+             peer = gtk_tree_view_new_with_model(cast(GtkTreeModel*)model);
+             g_object_unref(cast(GObject*)model);
+diff -Naur ../minwin_org/minwin/samples/CMakeLists.txt minwin_gtk/minwin/samples/CMakeLists.txt
+--- ../minwin_org/minwin/samples/CMakeLists.txt	1970-01-01 00:00:00.000000000 +0000
++++ minwin_gtk/minwin/samples/CMakeLists.txt	2007-03-10 09:00:08.000000000 +0000
+@@ -0,0 +1,37 @@
++SET(CMAKE_FIND_LIBRARY_PREFIXES "")
++SET(CMAKE_FIND_LIBRARY_SUFFIXES ".so")
++
++FIND_PACKAGE (GTK2)
++
++IF (GTK2_FOUND)
++  INCLUDE_DIRECTORIES (${minwin_gtk_SOURCE_DIR} ${GTK2_INCLUDE_DIRS})
++  LINK_DIRECTORIES (${minwin_gtk_SOURCE_DIR} ${GTK2_LIBRARY_DIRS})
++
++  ADD_EXECUTABLE (sample sample.d)
++  TARGET_LINK_LIBRARIES (sample minwin_gtk)
++
++  ADD_EXECUTABLE (layout layout.d)
++  TARGET_LINK_LIBRARIES (layout minwin_gtk)
++
++  ADD_EXECUTABLE (topgroup topgroup.d)
++  TARGET_LINK_LIBRARIES (topgroup minwin_gtk)
++
++  ADD_EXECUTABLE (widgets widgets.d)
++  TARGET_LINK_LIBRARIES (widgets minwin_gtk)
++
++  ADD_EXECUTABLE (menus menus.d)
++  TARGET_LINK_LIBRARIES (menus minwin_gtk)
++
++  ADD_EXECUTABLE (painting painting.d)
++  TARGET_LINK_LIBRARIES (painting minwin_gtk)
++
++  ADD_EXECUTABLE (sdialog sdialog.d)
++  TARGET_LINK_LIBRARIES (sdialog minwin_gtk)
++
++  ADD_EXECUTABLE (sdialog2 sdialog2.d)
++  TARGET_LINK_LIBRARIES (sdialog2 minwin_gtk)
++
++  ADD_EXECUTABLE (idle idle.d)
++  TARGET_LINK_LIBRARIES (idle minwin_gtk)
++
++ENDIF (GTK2_FOUND)
+\ No newline at end of file

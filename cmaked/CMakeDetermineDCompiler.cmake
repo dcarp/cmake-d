@@ -1,7 +1,19 @@
+#
+# CMakeD - CMake module for D Language
+#
+# Copyright (c) 2007, Selman Ulug <selman.ulug@gmail.com>
+# All rights reserved.
+#
+# See Copyright.txt for details.
+#
+# Modified from CMake 2.6.5 CMakeDetermineCCompiler.cmake
+# See http://www.cmake.org/HTML/Copyright.html for details
+#
+
 # determine the compiler to use for D programs
 # NOTE, a generator may set CMAKE_D_COMPILER before
 # loading this file to force a compiler.
-# use environment variable DCC first if defined by user, next use 
+# use environment variable DC first if defined by user, next use 
 # the cmake variable CMAKE_GENERATOR_D which can be defined by a generator
 # as a default compiler
 

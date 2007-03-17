@@ -1,0 +1,9 @@
+all.d
+logging.d
+-version=MinWin32
+-allobj
+-Tminwin.lib
+-I..
+-lib
+-g
+-w

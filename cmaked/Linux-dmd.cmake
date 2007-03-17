@@ -1,3 +1,15 @@
+#
+# CMakeD - CMake module for D Language
+#
+# Copyright (c) 2007, Selman Ulug <selman.ulug@gmail.com>
+# All rights reserved.
+#
+# See Copyright.txt for details.
+#
+# Modified from CMake 2.6.5 gcc.cmake
+# See http://www.cmake.org/HTML/Copyright.html for details
+#
+
 SET (CMAKE_D_FLAGS_INIT "")
 SET (CMAKE_D_FLAGS_DEBUG_INIT "-g")
 #  SET (CMAKE_D_FLAGS_MINSIZEREL_INIT "-Os")

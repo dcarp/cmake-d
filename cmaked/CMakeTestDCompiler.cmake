@@ -1,8 +1,21 @@
+#
+# CMakeD - CMake module for D Language
+#
+# Copyright (c) 2007, Selman Ulug <selman.ulug@gmail.com>
+# All rights reserved.
+#
+# See Copyright.txt for details.
+#
+# Modified from CMake 2.6.5 CMakeTestCCompiler.cmake
+# See http://www.cmake.org/HTML/Copyright.html for details
+#
+
 # This file is used by EnableLanguage in cmGlobalGenerator to
 # determine that that selected D compiler can actually compile
 # and link the most basic of programs.   If not, a fatal error
 # is set and cmake stops processing commands and will not generate
 # any makefiles or projects.
+
 IF(NOT CMAKE_D_COMPILER_WORKS)
   MESSAGE(STATUS "Check for working D compiler: ${CMAKE_D_COMPILER}")
   FILE(WRITE ${CMAKE_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/CMakeTmp/testDCompiler.d

@@ -1,3 +1,12 @@
+#
+# CMakeD - CMake module for D Language
+#
+# Copyright (c) 2007, Selman Ulug <selman.ulug@gmail.com>
+# All rights reserved.
+#
+# See Copyright.txt for details.
+#
+
 PROJECT (cmaked NONE)
 
 SET (MOD_SRCS

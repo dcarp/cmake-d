@@ -1,3 +1,15 @@
+#
+# CMakeD - CMake module for D Language
+#
+# Copyright (c) 2007, Selman Ulug <selman.ulug@gmail.com>
+# All rights reserved.
+#
+# See Copyright.txt for details.
+#
+# Modified from CMake 2.6.5 CMakeCInformation.cmake
+# See http://www.cmake.org/HTML/Copyright.html for details
+#
+
 # This file sets the basic flags for the D language in CMake.
 # It also loads the available platform file for the system-compiler
 # if it exists.

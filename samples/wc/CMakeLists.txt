@@ -1,0 +1,3 @@
+PROJECT(wc D)
+
+ADD_EXECUTABLE(wc wc.d)

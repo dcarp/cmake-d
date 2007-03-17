@@ -1,0 +1,9 @@
+minwinchanges.diff
+------------------
+applied changes for CMakeD and compiler error fixes.
+
+minwin/docs
+-----------
+not included because of not installed sample
+if you want to look, see http://minwin.dsource.org
+

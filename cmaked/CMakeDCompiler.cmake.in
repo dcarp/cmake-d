@@ -1,3 +1,15 @@
+#
+# CMakeD - CMake module for D Language
+#
+# Copyright (c) 2007, Selman Ulug <selman.ulug@gmail.com>
+# All rights reserved. 
+#
+# See Copyright.txt for details.
+#
+# Modified from CMake 2.6.5 CMakeCCompiler.cmake.in
+# See http://www.cmake.org/HTML/Copyright.html for details
+# 
+
 SET(CMAKE_D_COMPILER "@CMAKE_D_COMPILER@")
 SET(CMAKE_D_COMPILER_ARG1 "@CMAKE_D_COMPILER_ARG1@")
 SET(CMAKE_AR "@CMAKE_AR@")
