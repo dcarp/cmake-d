@@ -3,15 +3,8 @@ import Hello.hello;
 
 int main()
 {
-  version (GNU)
-  {
-    Hail hello = new Hail();
-    hello.Print();
-  }
-  else
-  {
-    Print();
-  }
- 
+  Hail hello = new Hail();
+  hello.Print();
+  
   return 0;
 }

@@ -2,21 +2,13 @@ module Hello.hello;
 
 import std.stdio;
 
-version (GNU)
+class Hail
 {
-  class Hail
-  {
-  public:
-    void Print()
-      {
-        writefln ("Hello, World!");
-      }
-  }
-}
-else
-{
+public:
   void Print()
   {
      writefln ("Hello, World!");
   }
 }
+
+

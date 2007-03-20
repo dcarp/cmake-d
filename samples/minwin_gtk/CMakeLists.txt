@@ -20,8 +20,12 @@ IF (GTK2_FOUND)
     minwin/dialog.d     minwin/image.d      minwin/paint.d
     minwin/event.d      minwin/label.d      minwin/peer.d )
   
-  ADD_DEFINITIONS (-fversion=GTK ${GTK2_DEFINITIONS})
-  
+  IF(CMAKE_COMPILER_IS_GDC)
+    ADD_DEFINITIONS (-fversion=GTK ${GTK2_DEFINITIONS})
+  ELSE(CMAKE_COMPILER_IS_DMD)
+    ADD_DEFINITIONS (-version=GTK ${GTK2_DEFINITIONS})
+  ENDIF(CMAKE_COMPILER_IS_GDC)
+ 
   ADD_LIBRARY (minwin_gtk ${SRCS})
   
   TARGET_LINK_LIBRARIES (minwin_gtk ${GTK2_LIBRARIES})
