@@ -2,6 +2,8 @@
 # CMakeD - CMake module for D Language
 #
 # Copyright (c) 2007, Selman Ulug <selman.ulug@gmail.com>
+#                     Tim Burrell <tim.burrell@gmail.com>
+#
 # All rights reserved.
 #
 # See Copyright.txt for details.
@@ -93,8 +95,14 @@ ENDIF(NOT CMAKE_COMPILER_IS_GDC_RUN)
 
 
 # configure variables set in this file for fast reload later on
-CONFIGURE_FILE(${CMAKE_ROOT}/Modules/CMakeDCompiler.cmake.in 
+IF(EXISTS ${CMAKE_SOURCE_DIR}/cmake/Modules/CMakeDCompiler.cmake.in)
+	CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/cmake/Modules/CMakeDCompiler.cmake.in 
                "${CMAKE_PLATFORM_ROOT_BIN}/CMakeDCompiler.cmake" IMMEDIATE)
-MARK_AS_ADVANCED(CMAKE_AR)
+ELSE(EXISTS ${CMAKE_SOURCE_DIR}/cmake/Modules/CMakeDCompiler.cmake.in)
+	CONFIGURE_FILE(${CMAKE_ROOT}/Modules/CMakeDCompiler.cmake.in 
+               "${CMAKE_PLATFORM_ROOT_BIN}/CMakeDCompiler.cmake" IMMEDIATE)
+ENDIF(EXISTS ${CMAKE_SOURCE_DIR}/cmake/Modules/CMakeDCompiler.cmake.in)
 
+MARK_AS_ADVANCED(CMAKE_AR)
 SET(CMAKE_D_COMPILER_ENV_VAR "DC")
+

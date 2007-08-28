@@ -2,6 +2,8 @@
 # CMakeD - CMake module for D Language
 #
 # Copyright (c) 2007, Selman Ulug <selman.ulug@gmail.com>
+#                     Tim Burrell <tim.burrell@gmail.com>
+#
 # All rights reserved.
 #
 # See Copyright.txt for details.
@@ -15,13 +17,14 @@ SET (MOD_SRCS
 	CMakeTestDCompiler.cmake  
 	CMakeDetermineDCompiler.cmake  
 	FindGDCPath.cmake
+	UseDDoc.cmake
 )
 
 SET (PLAT_SRCS
-	Linux-dmd.cmake
-	Linux-gdc.cmake 
-	Windows-dmd.cmake              
-	Windows-gdc.cmake
+	Platform/Linux-dmd.cmake
+	Platform/Linux-gdc.cmake 
+	Platform/Windows-dmd.cmake              
+	Platform/Windows-gdc.cmake
 )
 
 INSTALL (FILES ${MOD_SRCS} DESTINATION ${CMAKE_ROOT}/Modules)

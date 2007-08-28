@@ -2,6 +2,8 @@
 # CMakeD - CMake module for D Language
 #
 # Copyright (c) 2007, Selman Ulug <selman.ulug@gmail.com>
+#                     Tim Burrell <tim.burrell@gmail.com>
+#
 # All rights reserved.
 #
 # See Copyright.txt for details.
@@ -14,6 +16,8 @@
 #
 
 SET(GDC_POSSIBLE_INCLUDE_PATHS
+  /usr/include/d/4.2.1
+  /usr/include/d/4.2.0
   /usr/include/d/4.1.2
   /usr/include/d/4.1.1
   /usr/include/d/4.1.0
