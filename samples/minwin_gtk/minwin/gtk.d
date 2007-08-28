@@ -1470,7 +1470,7 @@ extern (C) {
     }
 
     struct _GSourceCallbackFuncs {
-    void (*ref) (gpointer cb_data);
+    void (*theRef) (gpointer cb_data);
     void (*unref) (gpointer cb_data);
     void (*get) (gpointer cb_data,
             GSource *source,
