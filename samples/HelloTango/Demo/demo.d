@@ -1,4 +1,3 @@
-import std.stdio;
 import Hello.hello;
 
 int main()

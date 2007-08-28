@@ -1,13 +1,13 @@
 module Hello.hello;
 
-import std.stdio;
+import tango.io.Stdout;
 
 class Hail
 {
 public:
   void Print()
   {
-     writefln ("Hello, World!");
+     Stdout("Hello, World!").newline;
   }
 }
 
