@@ -1,0 +1,56 @@
+* clean up build response files: brf. It seems like comments are not
+allowed so I'll put the comments here. On linux the build will fail since
+it uses Windows commands for creating a library. If the build fails with
+"lib not found" or something run
+ar -r libminwin_gtk.a *.o
+Get build from www.dsource.org and run with
+build @gtk.brf or @win32.brf
+
+* x11
+ - font/fontset/encoding
+ - window resizing/repaint DONE
+
+* mswindows
+ - A vs W for string inputs - convert to wchar (DONE except for save/openFileDialog)
+
+* events: key, mouse DONE (well, some mouse)
+* event: window, focus, window-destroy etc etc
+* canvas DONE
+* framed panel DONE
+* layout mgr DONE
+* label DONE
+* cursor control
+* List widget
+* group-component DONE
+* images/offscreen rendering DONE
+* GXContext extensions for gdi+ and fancy drawing
+* color mgnt needed? just assume true-color on X DONE-true-color
+* double-buffering
+* abstract button DONE
+* toggle/radio button DONE
+* text widgets DONE
+* selection/clipboard
+* modal/nonmodal dialog DONE
+* util dialog boxes DONE(file)
+* screen access
+* cmd line parsing
+* printing (where supported)
+* scroll pane/scroll bars DONE
+* sash
+* menus DONE(basic)
+* context menus/popup menus
+* layout min/max size and
+* layout hide on overflow DONE
+
+requests:
+  window title getter DONE
+  custom window background color (not just white) DONE
+  get pen and font data from peers
+  test image, brush on gtk DONE
+  fillPolygon on Windows
+
+bugs:
+  dropdown on windows doesn't work
+  GroupBox doesn't let radio buttons switch
+  list on gtk is squished
+  border layout completely untested
