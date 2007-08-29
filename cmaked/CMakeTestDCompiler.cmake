@@ -158,6 +158,12 @@ ELSE(NOT CMAKE_D_TANGO_WORKS)
   ENDIF(C_TEST_WAS_RUN)
   SET(CMAKE_D_TANGO_WORKS 1 CACHE INTERNAL "")
 ENDIF(NOT CMAKE_D_TANGO_WORKS)
+
+# if both tango and phobos are selected try to choose which one is available
+IF(CMAKE_D_USE_TANGO AND CMAKE_D_USE_PHOBOS)
+	MESSAGE(FATAL_ERROR "Tango AND Phobos selected, please choose one or the other!")
+ENDIF(CMAKE_D_USE_TANGO AND CMAKE_D_USE_PHOBOS)
+
 # ensure the user has the appropriate std lib available
 IF(CMAKE_D_USE_TANGO AND NOT CMAKE_D_TANGO_WORKS)
 	MESSAGE(FATAL_ERROR "Tango is required for this project, but it is not available!")
