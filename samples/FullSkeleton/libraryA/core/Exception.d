@@ -18,7 +18,8 @@ module  libraryA.core.Exception;
 // Imports
 ///////////////////////////////////////
 
-import	tango.core.Exception;
+version (Tango)
+	import	tango.core.Exception;
 
 ////////////////////////////////////////////////////////////////////////////
 // Typedef's / Enums
@@ -31,10 +32,19 @@ import	tango.core.Exception;
 /**
  * PathNotFoundException Class
 **/
-class PathNotFoundException : IOException {
-	/// Default Constructor
-	this (char [] Message) {
-		super(Message);
+version (Tango) {
+	class PathNotFoundException : IOException {
+		/// Default Constructor
+		this (char [] Message) {
+			super(Message);
+		}
+	}
+} else {
+	class PathNotFoundException : Exception {
+		/// Default Constructor
+		this (char [] Message) {
+			super(Message);
+		}
 	}
 }
 

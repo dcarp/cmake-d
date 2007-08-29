@@ -25,7 +25,7 @@ version(RendererX11) {
 import	libraryB.render.RendererX11; 
 }
 version(RendererWin) {
-import	libraryB.render.RendererWin;
+import	libraryB.render.RendererWindows;
 }
 
 import	libraryA.io.Output;
