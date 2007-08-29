@@ -1,0 +1,4 @@
+MODULES = 
+	$(MODULE founDation)
+	$(MODULE enCurseD)
+	$(MODULE mmorlg)
