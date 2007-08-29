@@ -22,7 +22,7 @@ include(UseDDoc)
 # Project
 ##############
 
-project(FullSkeleton D C)
+project(FullSkeleton D)
 
 #################################
 # Defines
