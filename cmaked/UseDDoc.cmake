@@ -57,5 +57,17 @@ else (NOT CMAKE_D_BUILD_DOCS)
 		set(modString "${modString}\t$(MODULE ${item})\n")
 	endforeach(item)
 	file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/documentation/candydoc/modules.ddoc" ${modString})
+
+	# create index.html
+	set(modString "<html><head><title>${PROJECT_NAME} API Documentation</title></head><body>\n")
+	set(modString "<h>${PROJECT_NAME} API Documentation:<br /></h>\n")
+	set(modString "${modString}<ul>\n")
+	foreach(item ${modules})
+		string(REGEX REPLACE "[a-z0-9]*\\." "" filename ${item})
+		set(modString "${modString}\t<li> <a href=\"${filename}.html\">${item}</a> </li>\n")
+	endforeach(item)
+	set(modString "${modString}</ul>\n")
+	set(modString "${modString}</body></html>\n")
+	file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/documentation/index.html" ${modString})
 endif (NOT CMAKE_D_BUILD_DOCS)
 
