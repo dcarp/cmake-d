@@ -8,7 +8,8 @@ set(CMAKE_MODULE_PATH
 	${CMAKE_SOURCE_DIR}/cmake/Modules
 )
 
-# Using Tango
+# Using Phobos
+# ( Be sure to set this _before_ PROJECT definition )
 set(CMAKE_D_USE_PHOBOS True)
 
 # check for DDoc usage
