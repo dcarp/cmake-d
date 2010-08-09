@@ -15,7 +15,9 @@ PROJECT (cmaked NONE)
 # to build the  samples, and can break apps that use other FindGTK2 modules.
 SET (MOD_SRCS
 	CMakeDCompiler.cmake.in        
+	CMakeDCompilerId.d.in        
 	CMakeDInformation.cmake        
+	CMakeDCompilerABI.d        
 	CMakeTestDCompiler.cmake  
 	CMakeDetermineDCompiler.cmake  
 	FindGDCPath.cmake
