@@ -1,0 +1,33 @@
+#elif defined(__dmd__)
+# define COMPILER_ID "DMD"
+
+#elif defined(__gdc__)
+# define COMPILER_ID "gdc"
+
+#else /* unknown compiler */
+# define COMPILER_ID ""
+#endif
+
+/* Construct the string literal in pieces to prevent the source from
+   getting matched.  Store it in a pointer rather than an array
+   because some compilers will just produce instructions to fill the
+   array rather than assigning a pointer to a static array.  */
+char* info_compiler = "INFO" ":" "compiler[" COMPILER_ID "]";
+
+@CMAKE_C_COMPILER_ID_PLATFORM_CONTENT@
+
+/*--------------------------------------------------------------------------*/
+
+#ifdef ID_VOID_MAIN
+void main() {}
+#else
+int main(int argc, char* argv[])
+{
+  int require = 0;
+  require += info_compiler[argc];
+  require += info_platform[argc];
+  require += info_arch[argc];
+  (void)argv;
+  return require;
+}
+#endif

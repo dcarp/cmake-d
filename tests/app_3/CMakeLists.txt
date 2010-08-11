@@ -1,0 +1,5 @@
+ADD_EXECUTABLE ( app_3 app_3.d )
+INCLUDE_DIRECTORIES( app3 ${PROJECT_SOURCE_DIR} )
+MESSAGE( "Project source dir is ${PROJECT_SOURCE_DIR}" )
+TARGET_LINK_LIBRARIES ( app_3 lib_1 )
+ADD_TEST( app_3 app_3 )
