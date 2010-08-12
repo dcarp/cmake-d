@@ -1,6 +1,10 @@
 #!/bin/bash
 #
 # I don't like this setup.  Ideas welcome.
+#
+# This script creates a build directory as a peer of cmaked2,
+# and builds the tests there.
+#
 cd ../..
 rm -rf cmaked_test_build
 mkdir -p cmaked_test_build
