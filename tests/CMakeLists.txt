@@ -1,5 +1,8 @@
 # Tell cmake our project only concerns the D language.
 cmake_minimum_required(VERSION 2.8)
+# Look for cmake modules locally first
+set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/../cmaked)
+
 PROJECT (CMAKED2_TESTS D)
 ADD_DEFINITIONS( -w -wi )
 enable_testing()

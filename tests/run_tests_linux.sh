@@ -8,7 +8,7 @@ cd cmaked_test_build
 mkdir -p release
 cd release
 # Do a release build
-cmake ../../tests
+cmake ../../cmaked2/tests
 make
 make test
 cd ..
@@ -16,7 +16,7 @@ cd ..
 # Do a debug build
 mkdir -p debug
 cd debug
-cmake -DCMAKE_VERBOSE_MAKEFILE=1 -DCMAKE_BUILD_TYPE=debug ../../tests
+cmake -DCMAKE_VERBOSE_MAKEFILE=1 -DCMAKE_BUILD_TYPE=debug ../../cmaked2/tests
 make
 make test
 cd ../..
