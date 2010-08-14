@@ -1,5 +1,8 @@
-#elif defined(__dmd__)
-# define COMPILER_ID "DMD"
+#if defined(__dmd__)
+# define COMPILER_ID "dmd"
+
+#elif defined(__ldc__)
+# define COMPILER_ID "ldc"
 
 #elif defined(__gdc__)
 # define COMPILER_ID "gdc"
@@ -14,7 +17,7 @@
    array rather than assigning a pointer to a static array.  */
 char* info_compiler = "INFO" ":" "compiler[" COMPILER_ID "]";
 
-@CMAKE_C_COMPILER_ID_PLATFORM_CONTENT@
+@CMAKE_D_COMPILER_ID_PLATFORM_CONTENT@
 
 /*--------------------------------------------------------------------------*/
 

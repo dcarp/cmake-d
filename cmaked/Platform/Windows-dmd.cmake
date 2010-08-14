@@ -12,6 +12,8 @@
 # See http://www.cmake.org/HTML/Copyright.html for details
 #
 
+SET(CMAKE_D_OUTPUT_EXTENSION .obj)
+
 IF(CMAKE_D_USE_TANGO)
 	SET(DSTDLIB_FLAGS "-version=Tango")
 ENDIF(CMAKE_D_USE_TANGO)

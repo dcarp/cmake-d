@@ -1,7 +1,0 @@
-all.d
--allobj
--Tlibminwin_gtk
--I..
--fversion=GTK
--lib
--g

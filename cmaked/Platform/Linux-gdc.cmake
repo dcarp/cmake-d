@@ -12,6 +12,9 @@
 # See http://www.cmake.org/HTML/Copyright.html for details
 #
 
+SET(CMAKE_D_DASH_O "-o")
+SET(CMAKE_BASE_NAME gdc)
+
 IF(CMAKE_D_USE_TANGO)
 	SET(DSTDLIB_FLAGS "-fversion=Tango")
 ENDIF(CMAKE_D_USE_TANGO)

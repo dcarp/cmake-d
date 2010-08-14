@@ -3,6 +3,7 @@
 #
 # Copyright (c) 2007, Selman Ulug <selman.ulug@gmail.com>
 #                     Tim Burrell <tim.burrell@gmail.com>
+#                     Steve King <sk@metrokings.com>
 #
 # All rights reserved.
 #
@@ -18,30 +19,21 @@
 # It also loads a system - compiler - processor (or target hardware)
 # specific file, which is mainly useful for crosscompiling and embedded systems.
 
-# some compilers use different extensions (e.g. sdcc uses .rel)
-# so set the extension here first so it can be overridden by the compiler specific file
-IF(UNIX)
-  SET(CMAKE_D_OUTPUT_EXTENSION .o)
-ELSE(UNIX)
-  SET(CMAKE_D_OUTPUT_EXTENSION .obj)
-ENDIF(UNIX)
-
+MESSAGE( "**** Debug Info: Enter CMakeDInformation.cmake" )
 # Load compiler-specific information.
+
+SET( _INCLUDED_FILE 0 )  # reset the indicator if an include occurred.
+
 IF(CMAKE_D_COMPILER_ID)
   INCLUDE(Compiler/${CMAKE_D_COMPILER_ID}-D OPTIONAL)
 ENDIF(CMAKE_D_COMPILER_ID)
 
+# SET(CMAKE_D_OUTPUT_EXTENSION .o)
+
 SET(CMAKE_BASE_NAME)
 GET_FILENAME_COMPONENT(CMAKE_BASE_NAME ${CMAKE_D_COMPILER} NAME_WE)
-# This will need updating for the LLVM based ldc
-IF(CMAKE_COMPILER_IS_GDC)
-  SET(CMAKE_D_OUTPUT_NAME_SWITCH "-o")
-  SET(CMAKE_BASE_NAME gdc)
-ELSE(CMAKE_COMPILER_IS_GDC)
-  SET(CMAKE_D_OUTPUT_NAME_SWITCH "-of")
-  SET(CMAKE_BASE_NAME dmd)
-ENDIF(CMAKE_COMPILER_IS_GDC)
 
+SET( _INCLUDED_FILE 0 )  # reset the indicator if an include occurred.
 
 # load a hardware specific file, mostly useful for embedded compilers
 IF(CMAKE_SYSTEM_PROCESSOR)
@@ -53,16 +45,24 @@ IF(CMAKE_SYSTEM_PROCESSOR)
   ENDIF (NOT _INCLUDED_FILE)
 ENDIF(CMAKE_SYSTEM_PROCESSOR)
 
+MESSAGE( "**** Debug Info: CMAKE_SYSTEM_NAME = ${CMAKE_SYSTEM_NAME}" )
+MESSAGE( "**** Debug Info: CMAKE_D_COMPILER_ID = ${CMAKE_D_COMPILER_ID}" )
+MESSAGE( "**** Debug Info: CMAKE_BASE_NAME = ${CMAKE_BASE_NAME}" )
+
+SET( _INCLUDED_FILE 0 )  # reset the indicator if an include occurred.
 
 # load the system- and compiler specific files
 IF(CMAKE_D_COMPILER_ID)
   INCLUDE(Platform/${CMAKE_SYSTEM_NAME}-${CMAKE_D_COMPILER_ID}-D
     OPTIONAL RESULT_VARIABLE _INCLUDED_FILE)
 ENDIF(CMAKE_D_COMPILER_ID)
+
+# if no high specificity file was included, then try a more general one
 IF (NOT _INCLUDED_FILE)
   INCLUDE(Platform/${CMAKE_SYSTEM_NAME}-${CMAKE_BASE_NAME}
     OPTIONAL RESULT_VARIABLE _INCLUDED_FILE)
 ENDIF (NOT _INCLUDED_FILE)
+
 # We specify the compiler information in the system file for some
 # platforms, but this language may not have been enabled when the file
 # was first included.  Include it again to get the language info.
@@ -157,7 +157,7 @@ INCLUDE(CMakeCommonLanguageInclude)
 # create a D shared library
 IF(NOT CMAKE_D_CREATE_SHARED_LIBRARY)
 	SET(CMAKE_D_CREATE_SHARED_LIBRARY
-		"<CMAKE_D_COMPILER> <CMAKE_SHARED_LIBRARY_D_FLAGS> <LANGUAGE_COMPILE_FLAGS> <LINK_FLAGS> <CMAKE_SHARED_LIBRARY_CREATE_D_FLAGS> <CMAKE_SHARED_LIBRARY_SONAME_D_FLAG><TARGET_SONAME> ${CMAKE_D_OUTPUT_NAME_SWITCH}<TARGET> <OBJECTS> <LINK_LIBRARIES> ${DSTDLIB_FLAGS} ${CMAKE_D_STDLIBS}")
+		"<CMAKE_D_COMPILER> <CMAKE_SHARED_LIBRARY_D_FLAGS> <LANGUAGE_COMPILE_FLAGS> <LINK_FLAGS> <CMAKE_SHARED_LIBRARY_CREATE_D_FLAGS> <CMAKE_SHARED_LIBRARY_SONAME_D_FLAG><TARGET_SONAME> ${CMAKE_D_DASH_O}<TARGET> <OBJECTS> <LINK_LIBRARIES> ${DSTDLIB_FLAGS} ${CMAKE_D_STDLIBS}")
 ENDIF(NOT CMAKE_D_CREATE_SHARED_LIBRARY)
 
 # create a D shared module just copy the shared library rule
@@ -174,12 +174,12 @@ SET(CMAKE_D_ARCHIVE_FINISH "<CMAKE_RANLIB> <TARGET>")
 # compile a D file into an object file
 IF(NOT CMAKE_D_COMPILE_OBJECT)
     SET(CMAKE_D_COMPILE_OBJECT
-      "<CMAKE_D_COMPILER> <FLAGS> ${CMAKE_D_OUTPUT_NAME_SWITCH}<OBJECT> -c <SOURCE>")
+      "<CMAKE_D_COMPILER> <FLAGS> ${CMAKE_D_DASH_O}<OBJECT> -c <SOURCE>")
 ENDIF(NOT CMAKE_D_COMPILE_OBJECT)
 
 IF(NOT CMAKE_D_LINK_EXECUTABLE)
   SET(CMAKE_D_LINK_EXECUTABLE
-    "gcc <FLAGS> <CMAKE_D_LINK_FLAGS> <LINK_FLAGS> <OBJECTS> -o <TARGET> <LINK_LIBRARIES> ${CMAKE_D_STDLIBS}")
+    "<CMAKE_D_COMPILER> <FLAGS> <CMAKE_D_LINK_FLAGS> <LINK_FLAGS> <OBJECTS> ${CMAKE_D_DASH_O}<TARGET> <LINK_LIBRARIES> ${CMAKE_D_STDLIBS}")
 ENDIF(NOT CMAKE_D_LINK_EXECUTABLE)
 
 IF(NOT CMAKE_EXECUTABLE_RUNTIME_D_FLAG)
@@ -202,3 +202,4 @@ CMAKE_D_FLAGS_RELEASE
 CMAKE_D_FLAGS_RELWITHDEBINFO
 )
 SET(CMAKE_D_INFORMATION_LOADED 1)
+MESSAGE( "**** Debug Info: Exit CMakeDInformation.cmake" )

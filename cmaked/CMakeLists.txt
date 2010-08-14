@@ -11,8 +11,6 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 PROJECT (cmaked NONE)
 
-# note do not install FindGTK2.cmake.   it is not required to install it 
-# to build the  samples, and can break apps that use other FindGTK2 modules.
 SET (MOD_SRCS
 	CMakeDCompiler.cmake.in        
 	CMakeDCompilerId.d.in        
