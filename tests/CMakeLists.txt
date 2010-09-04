@@ -14,8 +14,8 @@ SET( GLOBAL_GCC_DEFS "-Wall -pedantic" )
 # higher than C++ (30) and C (10).  This causes CMAKE
 # to use the D linker in mixed linking cases.
 # Append our own definitions to the defaults.
-SET( CMAKE_C_FLAGS ${CMAKE_C_FLAGS} ${GLOBAL_GCC_DEFS} )
-SET( CMAKE_D_FLAGS ${CMAKE_D_FLAGS} ${GLOBAL_DMD_DEFS} )
+SET( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${GLOBAL_GCC_DEFS}" )
+SET( CMAKE_D_FLAGS "${CMAKE_D_FLAGS} ${GLOBAL_DMD_DEFS}" )
 
 enable_testing()
 
