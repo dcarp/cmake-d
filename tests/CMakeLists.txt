@@ -6,7 +6,7 @@ cmake_minimum_required(VERSION 2.8.1)
 # is fine.
 PROJECT (CMAKED2_TESTS C D )
 SET( GLOBAL_DMD_DEFS "-w -wi" )
-SET( GLOBAL_GCC_DEFS "-Wall -pedantic" )
+SET( GLOBAL_GCC_DEFS "-Wall -pedantic -m32" )
 
 # Don't use ADD_DEFINITIONS() with a mixed C + D project
 # since that adds the same flags to both C and D builds.
