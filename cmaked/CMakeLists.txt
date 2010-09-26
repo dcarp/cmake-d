@@ -20,6 +20,8 @@ SET (MOD_SRCS
 	CMakeDetermineDCompiler.cmake  
 	FindGDCPath.cmake
 	UseDDoc.cmake
+	UseDDeps.cmake
+	dependencies.cmake
 )
 
 SET (PLAT_SRCS
