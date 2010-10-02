@@ -22,6 +22,7 @@ SET (MOD_SRCS
 	UseDDoc.cmake
 	UseDDeps.cmake
 	dependencies.cmake
+	UseDUnittest.cmake
 )
 
 SET (PLAT_SRCS
