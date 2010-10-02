@@ -6,7 +6,12 @@
 #message("source file ${source_file}")
 #message("dependency file ${dependency_file}")
 
-execute_process(COMMAND ${CMAKE_D_COMPILER} ${include_directories} -deps=${dependency_file}.tmp -o- ${source_file})
+separate_arguments(CMAKE_D_FLAGS)
+
+# TODO
+# need to pass all arguments that are used for building
+# can't I use the build rule somehow
+execute_process(COMMAND ${CMAKE_D_COMPILER} ${CMAKE_D_FLAGS} ${include_directories} -deps=${dependency_file}.tmp -o- ${source_file})
 #message("executing:  ${CMAKE_D_COMPILER} ${CMAKE_D_FLAGS} ${include_directories} -deps=${dependency_file}.tmp -o- ${source_file}")
 
 if(NOT EXISTS ${dependency_file})

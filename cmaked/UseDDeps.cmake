@@ -24,21 +24,19 @@ macro(add_executable_with_dependencies _target)
 
 		#message("Checking dependencies for ${source_file}")
 		#message("Put into ${dependency_file}")
+		# TODO
+		# better way to get the included directories
 		get_directory_property(include_dirs INCLUDE_DIRECTORIES)
+		set(INCLUDES )
 		foreach(include_dir IN LISTS include_dirs)
-			#message("Adding include directory ${include_dir}")
-			set(include_directories "-I${include_dir} ${include_directories}")
+			list(APPEND INCLUDES "${CMAKE_INCLUDE_FLAG_D}${include_dir}")
 		endforeach()
 
-		# TODO
-		# somehow I have to pass each argument on its own
-		# this fails e.g. if using ${CMAKE_D_FLAGS} in dependencies.cmake
-		# or if there is more than one include dir
 		execute_process(
 			COMMAND ${CMAKE_COMMAND}
 			-D "CMAKE_D_COMPILER:STRING=${CMAKE_D_COMPILER}"
 			-D "CMAKE_D_FLAGS:STRING=${CMAKE_D_FLAGS}"
-			-D "include_directories:STRING=${include_directories}"
+			-D "include_directories:STRING=${INCLUDES}"
 			-D "source_file:STRING=${source_file}"
 			-D "dependency_file:STRING=${dependency_file}"
 			-P "${CMAKE_ROOT}/Modules/dependencies.cmake" # TODO hard coded path
@@ -54,7 +52,7 @@ macro(add_executable_with_dependencies _target)
 			COMMAND ${CMAKE_COMMAND}
 			-D "CMAKE_D_COMPILER:STRING=${CMAKE_D_COMPILER}"
 			-D "CMAKE_D_FLAGS:STRING=${CMAKE_D_FLAGS}"
-			-D "include_directories:STRING=${include_directories}"
+			-D "include_directories:STRING=${INCLUDES}"
 			-D "source_file:STRING=${source_file}"
 			-D "dependency_file:STRING=${dependency_file}"
 			-P "${CMAKE_ROOT}/Modules/dependencies.cmake" # TODO hard coded path
