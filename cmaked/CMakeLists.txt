@@ -23,6 +23,7 @@ SET (MOD_SRCS
 	UseDDeps.cmake
 	dependencies.cmake
 	UseDUnittest.cmake
+	FindPhobos.cmake
 )
 
 SET (PLAT_SRCS
