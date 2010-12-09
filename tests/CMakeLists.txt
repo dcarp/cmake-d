@@ -5,8 +5,8 @@ cmake_minimum_required(VERSION 2.8.1)
 # in the project declaration.  Listing other languages
 # is fine.
 PROJECT (CMAKED2_TESTS C D )
-SET( GLOBAL_DMD_DEFS "-w -wi" )
-SET( GLOBAL_GCC_DEFS "-Wall -pedantic -m32" )
+SET( GLOBAL_DMD_DEFS "-w" )
+SET( GLOBAL_GCC_DEFS "-Wall -pedantic" )
 
 # Don't use ADD_DEFINITIONS() with a mixed C + D project
 # since that adds the same flags to both C and D builds.

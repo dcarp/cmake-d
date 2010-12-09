@@ -25,6 +25,8 @@ SET(CMAKE_D_OUTPUT_EXTENSION .o)
 SET(CMAKE_D_DASH_O "-of")
 SET(CMAKE_BASE_NAME dmd)
 
+SET(CMAKE_STATIC_LIBRARY_CREATE_D_FLAGS "-lib")
+
 SET(CMAKE_SHARED_LIBRARY_D_FLAGS "")            # -pic
 SET(CMAKE_SHARED_LIBRARY_CREATE_D_FLAGS "-shared")       # -shared
 SET(CMAKE_SHARED_LIBRARY_LINK_D_FLAGS "")         # +s, flag for exe link to use shared lib
