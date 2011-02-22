@@ -1,6 +1,6 @@
 import std.stdio;
 import core.thread;
-import std.perf;
+import std.datetime;
 
 // Yield count should be larger for a 
 // more accurate measurment, but this
@@ -38,12 +38,12 @@ void fiber_test()
 	foreach( ref f; fib_array )
 		f = new Fiber( &fiber_func );
 
-	auto timer = new PerformanceCounter;
+	StopWatch sw;
 
 	uint i = yield_count;
 
 	// fibers are cooperative and need a driver loop
-	timer.start();
+	sw.start();
 	bool done;
 	do
 	{	
@@ -55,10 +55,10 @@ void fiber_test()
 				done = false;
 		}
 	} while( !done );
-	timer.stop();
+	sw.stop();
 
 	writeln( "Elapsed time for ", worker_count, " workers times ", yield_count, " yield() calls with fibers = ",
-			timer.milliseconds, "ms" );
+			sw.peek().msecs, "ms" );
 }
 
 void thread_test()
@@ -68,14 +68,14 @@ void thread_test()
 	foreach( ref t; thread_array )
 		t = new Thread( &thread_func );
 
-	auto timer = new PerformanceCounter;
-	timer.start();
+	StopWatch sw;
+	sw.start();
 	foreach( t; thread_array )
 		t.start();
 	thread_joinAll();
-	timer.stop();
+	sw.stop();
 	writeln( "Elapsed time for ", worker_count, " workers times ", yield_count, " yield() calls with threads = ",
-			timer.milliseconds, "ms" );
+			sw.peek().msecs, "ms" );
 }
 int main()
 {
