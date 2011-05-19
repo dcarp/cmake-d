@@ -1,3 +1,5 @@
 .*\.cbp
 .*\.layout
 .*\.swp
+build_tests\.*
+build\.*
