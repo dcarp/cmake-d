@@ -9,16 +9,6 @@ import std.datetime;
 immutable uint yield_count = 1000;
 immutable uint worker_count = 10;
 
-uint stack_check()
-{
-	uint x;
-	asm
-	{
-		mov x,ESP;
-	}
-	return x;
-}
-
 void fiber_func()
 {
 	uint i = yield_count;
