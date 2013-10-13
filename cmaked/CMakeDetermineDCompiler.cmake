@@ -137,7 +137,7 @@ IF(MSVC_D_ARCHITECTURE_ID)
 ENDIF(MSVC_D_ARCHITECTURE_ID)
 # configure variables set in this file for fast reload later on
 CONFIGURE_FILE(${CMAKE_ROOT}/Modules/CMakeDCompiler.cmake.in
-  "${CMAKE_PLATFORM_ROOT_BIN}/CMakeDCompiler.cmake"
+  "${CMAKE_PLATFORM_INFO_DIR}/CMakeDCompiler.cmake"
   @ONLY IMMEDIATE # IMMEDIATE must be here for compatibility mode <= 2.0
   )
 SET(CMAKE_D_COMPILER_ENV_VAR "DC")
