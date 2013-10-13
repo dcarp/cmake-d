@@ -11,7 +11,6 @@
 # Modified from CMake 2.6.5 gcc.cmake
 # See http://www.cmake.org/HTML/Copyright.html for details
 #
-MESSAGE( "**** Debug Info: Enter Linux-gdc.cmake" )
 
 SET(CMAKE_D_DASH_O "-o")
 SET(CMAKE_BASE_NAME gdc)
@@ -40,5 +39,3 @@ SET (CMAKE_D_CREATE_ASSEMBLY_SOURCE "<CMAKE_D_COMPILER> <FLAGS> -S <SOURCE> -o <
 #SET (CMAKE_INCLUDE_SYSTEM_FLAG_D "-isystem ")
 
 SET(CMAKE_INCLUDE_FLAG_D "-I")       # -I
-
-MESSAGE( "**** Debug Info: Exit Linux-gdc.cmake" )
