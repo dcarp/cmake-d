@@ -8,4 +8,7 @@ Usage
 
 1. Download and extract https://github.com/dcarp/cmaked2/archive/master.zip to a local directory \<cmaked2-path\>
 2. Create a D CMake Project: project(project-name D)
-3. Run cmake -DCMAKE_MODULE_PATH=\<cmaked2-path\> \<path-to-source\>
+3. Run cmake as usual specifing the cmaked2 path:
+  ```
+	cmake -DCMAKE_MODULE_PATH=<cmaked2-path> <path-to-source>
+  ```
