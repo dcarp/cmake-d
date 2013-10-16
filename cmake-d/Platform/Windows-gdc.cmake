@@ -6,7 +6,7 @@
 #
 # All rights reserved.
 #
-# See Copyright.txt for details.
+# See LICENSE for details.
 #
 # Modified from CMake 2.6.5 gcc.cmake
 # See http://www.cmake.org/HTML/Copyright.html for details

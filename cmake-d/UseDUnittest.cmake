@@ -4,7 +4,7 @@
 #
 # All rights reserved.
 #
-# See Copyright.txt for details.
+# See LICENSE for details.
 #
 
 macro(add_unittests _sourcefile)

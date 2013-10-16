@@ -1,21 +1,27 @@
 #
 # CMakeD - CMake module for D Language
 #
-# Copyright (c) 2007, Selman Ulug <selman.ulug@gmail.com>
+# Copyright (c) 2013, Selman Ulug <selman.ulug@gmail.com>
 #                     Tim Burrell <tim.burrell@gmail.com>
+#                     Dragos Carp <dragos.carp@gmail.com>
 #
 # All rights reserved.
 #
-# See Copyright.txt for details.
+# See LICENSE for details.
 #
-
-
 # - Find GDC Include Path
 #
 #  GDC_INCLUDE_PATH = path to where object.d is found
 #
 
 SET(GDC_POSSIBLE_INCLUDE_PATHS
+  /usr/include/d/4.8.2
+  /usr/include/d/4.8.1
+  /usr/include/d/4.8.0
+  /usr/include/d/4.7.3
+  /usr/include/d/4.7.2
+  /usr/include/d/4.7.1
+  /usr/include/d/4.7.0
   /usr/include/d/4.2.1
   /usr/include/d/4.2.0
   /usr/include/d/4.1.2

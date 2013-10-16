@@ -4,7 +4,7 @@
 #
 # All rights reserved.
 #
-# See Copyright.txt for details.
+# See LICENSE for details.
 #
 
 macro(add_executable_with_dependencies _target)

@@ -3,10 +3,11 @@
 #
 # Copyright (c) 2007, Selman Ulug <selman.ulug@gmail.com>
 #                     Tim Burrell <tim.burrell@gmail.com>
+#                     Dragos Carp <dragos.carp@gmail.com>
 #
 # All rights reserved.
 #
-# See Copyright.txt for details.
+# See LICENSE for details.
 #
 # Modified from CMake 2.6.5 CMakeTestCCompiler.cmake
 # See http://www.cmake.org/HTML/Copyright.html for details
