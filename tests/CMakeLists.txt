@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 2.8.1)
 # We must explicitly indicate we're using the D language
 # in the project declaration.  Listing other languages
 # is fine.
-PROJECT (CMAKED2_TESTS C D )
+PROJECT (CMAKE-D_TESTS C D )
 SET( GLOBAL_DMD_DEFS "-w" )
 SET( GLOBAL_GCC_DEFS "-Wall -pedantic" )
 

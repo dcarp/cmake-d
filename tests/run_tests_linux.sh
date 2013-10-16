@@ -5,14 +5,15 @@
 # This script creates a build directory as a peer of cmaked2,
 # and builds the tests there.
 #
-cd ../..
-rm -rf cmake-d-test-build
-mkdir -p cmake-d-test-build
-cd cmake-d-test-build
+CMAKE_DIR=`pwd`/../cmake-d
+TEST_DIR=../../cmake-d-test-build
+rm -rf $TEST_DIR
+mkdir -p $TEST_DIR
+cd $TEST_DIR
 mkdir -p release
 cd release
 # Do a release build
-cmake ../../cmake-d/tests
+cmake -DCMAKE_MODULE_PATH:PATH=$CMAKE_DIR ../../cmake-d/tests
 make
 make test
 cd ..
@@ -20,8 +21,6 @@ cd ..
 # Do a debug build
 mkdir -p debug
 cd debug
-cmake -DCMAKE_VERBOSE_MAKEFILE=1 -DCMAKE_BUILD_TYPE=debug ../../cmake-d/tests
+cmake -DCMAKE_MODULE_PATH:PATH=$CMAKE_DIR -DCMAKE_VERBOSE_MAKEFILE=1 -DCMAKE_BUILD_TYPE=debug ../../cmake-d/tests
 make
 make test
-cd ../..
-
