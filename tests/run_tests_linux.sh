@@ -6,13 +6,13 @@
 # and builds the tests there.
 #
 cd ../..
-rm -rf cmaked_test_build
-mkdir -p cmaked_test_build
-cd cmaked_test_build
+rm -rf cmake-d-test-build
+mkdir -p cmake-d-test-build
+cd cmake-d-test-build
 mkdir -p release
 cd release
 # Do a release build
-cmake ../../cmaked2/tests
+cmake ../../cmake-d/tests
 make
 make test
 cd ..
@@ -20,7 +20,7 @@ cd ..
 # Do a debug build
 mkdir -p debug
 cd debug
-cmake -DCMAKE_VERBOSE_MAKEFILE=1 -DCMAKE_BUILD_TYPE=debug ../../cmaked2/tests
+cmake -DCMAKE_VERBOSE_MAKEFILE=1 -DCMAKE_BUILD_TYPE=debug ../../cmake-d/tests
 make
 make test
 cd ../..

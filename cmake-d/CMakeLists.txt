@@ -9,7 +9,7 @@
 # See Copyright.txt for details.
 #
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8.1)
-PROJECT (cmaked NONE)
+PROJECT (cmake-d NONE)
 
 SET (MOD_SRCS
 	CMakeDCompiler.cmake.in        

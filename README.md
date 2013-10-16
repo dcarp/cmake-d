@@ -10,5 +10,5 @@ Usage
 2. Create a D CMake Project: project(project-name D)
 3. Run cmake as usual specifing the cmake-d path. To cache it, don't forget to specify the *:PATH* variable type.<br/>
 ```
-cmake -DCMAKE_MODULE_PATH:PATH=<cmake-d-dir> <path-to-source>
+cmake -DCMAKE_MODULE_PATH:PATH=<cmake-d-dir>/cmake-d <path-to-source>
 ```
