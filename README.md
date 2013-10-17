@@ -12,10 +12,4 @@ Usage
 ```
 cmake -DCMAKE_MODULE_PATH:PATH=<cmake-d-dir>/cmake-d <path-to-source>
 ```
-<br/>
-
----
-*Notes:*
-  - *use absolute path for CMAKE_MODULE_PATH*
-  - *Because internally cmake uses relative paths, on Windows, \<cmake-d-dir\> and cmake installation directory need to be on the same drive.*
 
