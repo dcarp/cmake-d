@@ -14,7 +14,7 @@
 #  GDC_INCLUDE_PATH = path to where object.d is found
 #
 
-SET(GDC_POSSIBLE_INCLUDE_PATHS
+set(GDC_POSSIBLE_INCLUDE_PATHS
   /usr/include/d/4.8.2
   /usr/include/d/4.8.1
   /usr/include/d/4.8.0
@@ -41,9 +41,9 @@ SET(GDC_POSSIBLE_INCLUDE_PATHS
   /usr/include/d/3.4.0
   )
 
-FIND_PATH(GDC_INCLUDE_PATH object.d
+find_path(GDC_INCLUDE_PATH object.d
   ${GDC_POSSIBLE_INCLUDE_PATHS})
 
-MARK_AS_ADVANCED(
+mark_as_advanced(
   GDC_INCLUDE_PATH
   )

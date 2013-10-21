@@ -1,5 +1,5 @@
-int main( string[] args )
+int main(string[] args)
 {
-  int require = 0;
-  return require;
+	int require = 0;
+	return require;
 }
