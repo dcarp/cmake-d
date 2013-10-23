@@ -30,6 +30,7 @@ SET (MOD_SRCS
 SET (PLAT_SRCS
 	Platform/Linux-dmd.cmake
 	Platform/Linux-gdc.cmake 
+	Platform/Linux-ldc.cmake 
 	Platform/Windows-dmd.cmake              
 	Platform/Windows-gdc.cmake
 )
