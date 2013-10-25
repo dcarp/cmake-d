@@ -25,12 +25,13 @@ SET (MOD_SRCS
 	dependencies.cmake
 	UseDUnittest.cmake
 	FindPhobos.cmake
+	CMakePlatformId.di.in
 )
 
 SET (PLAT_SRCS
 	Platform/Linux-dmd.cmake
 	Platform/Linux-gdc.cmake 
-	Platform/Linux-ldc.cmake 
+	Platform/Linux-ldc2.cmake 
 	Platform/Windows-dmd.cmake              
 	Platform/Windows-gdc.cmake
 )
