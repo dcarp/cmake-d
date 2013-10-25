@@ -154,7 +154,7 @@ if(MSVC_D_ARCHITECTURE_ID)
 endif(MSVC_D_ARCHITECTURE_ID)
 # configure variables set in this file for fast reload later on
 find_file(CMAKE_D_COMPILER_CMAKE_IN CMakeDCompiler.cmake.in
-  PATHS ${CMAKE_ROOT} ${CMAKE_MODULE_PATH})
+  PATHS ${CMAKE_ROOT}/Modules ${CMAKE_MODULE_PATH})
 configure_file(${CMAKE_D_COMPILER_CMAKE_IN}
   ${CMAKE_PLATFORM_INFO_DIR}/CMakeDCompiler.cmake
   @ONLY IMMEDIATE # IMMEDIATE must be here for compatibility mode <= 2.0

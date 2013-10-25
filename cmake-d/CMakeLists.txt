@@ -25,6 +25,7 @@ SET (MOD_SRCS
 	dependencies.cmake
 	UseDUnittest.cmake
 	FindPhobos.cmake
+	CMakePlatformId.di.in
 )
 
 SET (PLAT_SRCS
