@@ -112,10 +112,11 @@ if(NOT CMAKE_D_COMPILER_ID_RUN)
 
   # Try to identify the compiler.
   set(CMAKE_D_COMPILER_ID)
-  find_file(CMAKE_PLATFORM_ID_CONTENT_FILE CMakePlatformId.di.in 
-    PATHS ${CMAKE_ROOT}/Modules ${CMAKE_MODULE_PATH})
+  find_file(CMAKE_PLATFORM_ID_CONTENT_FILE CMakePlatformId.di.in PATHS ${CMAKE_ROOT}/Modules
+    ${CMAKE_MODULE_PATH} NO_DEFAULT_PATH)
   file(READ ${CMAKE_PLATFORM_ID_CONTENT_FILE} CMAKE_D_COMPILER_ID_PLATFORM_CONTENT)
-  find_file(CMAKE_D_COMPILER_ID_FILE_IN CMakeDCompilerId.d.in PATHS ${CMAKE_ROOT}/Modules ${CMAKE_MODULE_PATH})
+  find_file(CMAKE_D_COMPILER_ID_FILE_IN CMakeDCompilerId.d.in PATHS ${CMAKE_ROOT}/Modules
+    ${CMAKE_MODULE_PATH} NO_DEFAULT_PATH)
   # Workaround for bug http://public.kitware.com/Bug/view.php?id=14481
   # if CMAKE_MODULE_PATH is used, then patch ${CMAKE_ROOT}/Modules/CMakeDetermineCompilerId.cmake
   get_filename_component(CMAKE_D_COMPILER_ID_FILE_IN_PATH ${CMAKE_D_COMPILER_ID_FILE_IN} PATH)
@@ -124,10 +125,10 @@ if(NOT CMAKE_D_COMPILER_ID_RUN)
   else(CMAKE_D_COMPILER_ID_FILE_IN_PATH STREQUAL ${CMAKE_ROOT}/Modules)
     file(READ ${CMAKE_ROOT}/Modules/CMakeDetermineCompilerId.cmake CMAKE_DETERMINE_COMPILER_ID_CMAKE_CONTENT)
     STRING(REPLACE "file(READ \${CMAKE_ROOT}/Modules/\${src}.in ID_CONTENT_IN)" 
-      "find_file(src_in \${src}.in PATHS \${CMAKE_ROOT}/Modules \${CMAKE_MODULE_PATH})
+      "find_file(src_in \${src}.in PATHS \${CMAKE_ROOT}/Modules \${CMAKE_MODULE_PATH} NO_DEFAULT_PATH)
   file(READ \${src_in} ID_CONTENT_IN)
   unset(src_in CACHE)"
-      CMAKE_DETERMINE_COMPILER_ID_CMAKE_CONTENT_PATCHED ${CMAKE_DETERMINE_COMPILER_ID_CMAKE_CONTENT})
+    CMAKE_DETERMINE_COMPILER_ID_CMAKE_CONTENT_PATCHED ${CMAKE_DETERMINE_COMPILER_ID_CMAKE_CONTENT})
     file(WRITE ${CMAKE_PLATFORM_INFO_DIR}/CMakeDetermineCompilerId.cmake
       ${CMAKE_DETERMINE_COMPILER_ID_CMAKE_CONTENT_PATCHED})
     include(${CMAKE_PLATFORM_INFO_DIR}/CMakeDetermineCompilerId.cmake)
@@ -153,8 +154,8 @@ if(MSVC_D_ARCHITECTURE_ID)
     "set(MSVC_D_ARCHITECTURE_ID ${MSVC_D_ARCHITECTURE_ID})")
 endif(MSVC_D_ARCHITECTURE_ID)
 # configure variables set in this file for fast reload later on
-find_file(CMAKE_D_COMPILER_CMAKE_IN CMakeDCompiler.cmake.in
-  PATHS ${CMAKE_ROOT}/Modules ${CMAKE_MODULE_PATH})
+find_file(CMAKE_D_COMPILER_CMAKE_IN CMakeDCompiler.cmake.in PATHS ${CMAKE_ROOT}/Modules
+  ${CMAKE_MODULE_PATH} NO_DEFAULT_PATH)
 configure_file(${CMAKE_D_COMPILER_CMAKE_IN}
   ${CMAKE_PLATFORM_INFO_DIR}/CMakeDCompiler.cmake
   @ONLY IMMEDIATE # IMMEDIATE must be here for compatibility mode <= 2.0

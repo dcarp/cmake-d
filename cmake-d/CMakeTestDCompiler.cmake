@@ -61,11 +61,11 @@ else(NOT CMAKE_D_COMPILER_WORKS)
   else(CMAKE_D_COMPILER_FORCED)
     # Try to identify the ABI and configure it into CMakeDCompiler.cmake
     include(${CMAKE_ROOT}/Modules/CMakeDetermineCompilerABI.cmake)
-    find_file(CMAKE_D_COMPILER_ABI_SRC CMakeDCompilerABI.d
-      PATHS ${CMAKE_ROOT}/Modules ${CMAKE_MODULE_PATH})
+    find_file(CMAKE_D_COMPILER_ABI_SRC CMakeDCompilerABI.d PATHS ${CMAKE_ROOT}/Modules
+      ${CMAKE_MODULE_PATH} NO_DEFAULT_PATH)
     CMAKE_DETERMINE_COMPILER_ABI(D ${CMAKE_D_COMPILER_ABI_SRC})
-    find_file(CMAKE_D_COMPILER_CMAKE_IN CMakeDCompiler.cmake.in
-      PATHS ${CMAKE_ROOT}/Modules ${CMAKE_MODULE_PATH})
+    find_file(CMAKE_D_COMPILER_CMAKE_IN CMakeDCompiler.cmake.in PATHS ${CMAKE_ROOT}/Modules
+      ${CMAKE_MODULE_PATH} NO_DEFAULT_PATH)
     configure_file(
       ${CMAKE_D_COMPILER_CMAKE_IN}
       ${CMAKE_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/CMakeDCompiler.cmake
