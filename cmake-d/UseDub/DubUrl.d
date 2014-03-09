@@ -1,0 +1,91 @@
+import std.algorithm;
+import std.array;
+import std.file;
+import std.getopt;
+import std.json;
+import std.stdio;
+import std.string;
+
+int main(string[] args)
+{
+    string registryFile = "";
+    string packageVersion = "";
+    bool listVersions;
+    string outputPath = ".";
+
+    getopt(args,
+           "package|p", &registryFile,
+           "tag|t", &packageVersion,
+           "list|l", &listVersions,
+           "output|o", &outputPath);
+
+    if (registryFile.empty)
+    {
+        stderr.writeln("Package registry file (<package_name>.json) need to be specified.");
+        return -1;
+    }
+
+    if (!exists(registryFile) && !registryFile.endsWith(".json"))
+        registryFile ~= ".json";
+
+    if (!exists(registryFile))
+    {
+        stderr.writefln("Package registry file '%s' not found.", registryFile);
+        return -1;
+    }
+
+    string json = readText(registryFile);
+    JSONValue node;
+    JSONValue root = parseJSON(json);
+
+    if (packageVersion.empty)
+    {
+        node = root["versions"][0];
+    }
+    else
+    {
+        auto range = root["versions"].array.find!"a[\"version\"].str == b"(packageVersion);
+        if (!range.empty)
+        {
+            node = range[0];
+        }
+        else
+        {
+            stderr.writefln("No version tagged '%s' found.", packageVersion);
+            return -1;
+        }
+    }
+
+    if (registryFile.endsWith(".json"))
+    {
+        registryFile = registryFile[0..$-5];
+    }   
+    
+    if (listVersions)
+    {
+        writefln("Package '%s'", registryFile);
+        
+        foreach(n; root["versions"].array)
+        {
+            writefln("  %s => %s", n["version"].str, n["downloadUrl"].str);
+        }
+    }
+
+    packageVersion = node["version"].str;
+    auto packageUrl = node["downloadUrl"].str;
+    auto packageName = root["name"].str;
+
+    if (!outputPath.isDir)
+    {
+        stderr.writefln("Output path '%s' need to be a directory.", outputPath);
+        return -1;
+    }
+
+    string output = "set(DUB_PACKAGE_NAME, \"%s\")\n".format(packageName) ~
+                    "set(DUB_PACKAGE_VERSION \"%s\")\n".format(packageVersion) ~
+                    "set(DUB_PACKAGE_URL \"%s\")\n".format(packageUrl);
+
+    std.file.write(outputPath ~ "/" ~ packageName ~ ".cmake", output);
+
+    return 0;
+}
