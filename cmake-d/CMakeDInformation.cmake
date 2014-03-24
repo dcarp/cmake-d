@@ -232,6 +232,10 @@ include(CMakeCommonLanguageInclude)
 # <CMAKE_AR>
 # <CMAKE_RANLIB>
 
+# < 2.8.10 backward compatibility
+if(NOT CMAKE_PLATFORM_INFO_DIR)
+  set(CMAKE_PLATFORM_INFO_DIR ${CMAKE_BINARY_DIR}${CMAKE_FILES_DIRECTORY})
+endif(NOT CMAKE_PLATFORM_INFO_DIR)
 
 # create a D shared library
 if(NOT CMAKE_D_CREATE_SHARED_LIBRARY)

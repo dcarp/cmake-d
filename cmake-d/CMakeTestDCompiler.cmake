@@ -22,11 +22,11 @@ include(CMakeTestCompilerCommon)
 # any makefiles or projects.
 if(NOT CMAKE_D_COMPILER_WORKS)
   PrintTestCompilerStatus("D" "")
-  file(WRITE ${CMAKE_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/CMakeTmp/testDCompiler.d
+  file(WRITE ${CMAKE_PLATFORM_INFO_DIR}/CMakeTmp/testDCompiler.d
     "int main(char[][] args)\n"
     "{return args.sizeof-1;}\n")
   try_compile(CMAKE_D_COMPILER_WORKS ${CMAKE_BINARY_DIR}
-    ${CMAKE_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/CMakeTmp/testDCompiler.d
+    ${CMAKE_PLATFORM_INFO_DIR}/CMakeTmp/testDCompiler.d
     OUTPUT_VARIABLE OUTPUT)
   set(D_TEST_WAS_RUN 1)
 endif(NOT CMAKE_D_COMPILER_WORKS)
@@ -35,13 +35,13 @@ if(NOT CMAKE_D_COMPILER_WORKS)
   PrintTestCompilerStatus("D" " -- broken")
   message(STATUS "To force a specific D compiler set the DC environment variable")
   message(STATUS "    ie - export DC=\"/usr/bin/dmd\"")
-  file(APPEND ${CMAKE_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/CMakeError.log
+  file(APPEND ${CMAKE_PLATFORM_INFO_DIR}/CMakeError.log
     "Determining if the D compiler works failed with "
     "the following output:\n${OUTPUT}\n\n")
   # if the compiler is broken make sure to remove the platform file
   # since Windows-cl configures both c/cxx files both need to be removed
   # when c or c++ fails
-  file(REMOVE ${CMAKE_PLATFORM_ROOT_BIN}/CMakeDPlatform.cmake )
+  file(REMOVE ${CMAKE_PLATFORM_INFO_DIR}/CMakeDPlatform.cmake)
   message(FATAL_ERROR "The D compiler \"${CMAKE_D_COMPILER}\" "
     "is not able to compile a simple test program.\nIt fails "
     "with the following output:\n ${OUTPUT}\n\n"
@@ -49,7 +49,7 @@ if(NOT CMAKE_D_COMPILER_WORKS)
 else(NOT CMAKE_D_COMPILER_WORKS)
   if(D_TEST_WAS_RUN)
     message(STATUS "Check for working D compiler: ${CMAKE_D_COMPILER} -- works")
-    file(APPEND ${CMAKE_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/CMakeOutput.log
+    file(APPEND ${CMAKE_PLATFORM_INFO_DIR}/CMakeOutput.log
       "Determining if the D compiler works passed with "
       "the following output:\n${OUTPUT}\n\n")
   endif(D_TEST_WAS_RUN)
@@ -68,10 +68,10 @@ else(NOT CMAKE_D_COMPILER_WORKS)
       ${CMAKE_MODULE_PATH} NO_DEFAULT_PATH)
     configure_file(
       ${CMAKE_D_COMPILER_CMAKE_IN}
-      ${CMAKE_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/CMakeDCompiler.cmake
+      ${CMAKE_PLATFORM_INFO_DIR}/CMakeDCompiler.cmake
       @ONLY IMMEDIATE # IMMEDIATE must be here for compatibility mode <= 2.0
       )
-    include(${CMAKE_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/CMakeDCompiler.cmake)
+    include(${CMAKE_PLATFORM_INFO_DIR}/CMakeDCompiler.cmake)
     unset(CMAKE_D_COMPILER_ABI_SRC CACHE)
     unset(CMAKE_D_COMPILER_CMAKE_IN CACHE)
   endif(CMAKE_D_COMPILER_FORCED)
