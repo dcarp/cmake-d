@@ -6,6 +6,54 @@ import std.json;
 import std.stdio;
 import std.string;
 
+
+struct Version
+{
+    uint major;
+    uint minor;
+    uint patch;
+
+    this(string )
+}
+
+/**
+ * Finds the best match of $(D range) in $(D choices) versions list.
+ *
+ * Params:
+ * range = Match criteria.
+ * choices = Versions list it is matched against.
+ *
+ * Returns:
+ * Best match in $(D choices) or empty string if no match is found.
+ *
+ * See_Also:
+ * $(WEB https://github.com/npm/npm/blob/master/doc/misc/semver.md#ranges Ranges definition)
+ */
+string matchVersion(string range, string[] choices)
+{
+    foreach (ref choice; choices)
+    {
+        choice.skipOver('~');
+    }
+
+    if (range.skipOver('~'))
+    {
+        foreach (choice; choices)
+        {
+            if (choice.startsWith(range))
+                return choice;
+        }
+        return "";
+    }
+
+    return "";
+}
+
+unittest
+{
+
+}
+
 int main(string[] args)
 {
     string registryFile = "";
