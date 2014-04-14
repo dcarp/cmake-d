@@ -217,8 +217,6 @@ struct SemVerRange
 
         ranges = [SimpleRange[].init];
 
-        writeln(semVerRange);
-
         while (!semVerRange.stripLeft.empty)
         {
             auto m = semVerRange.matchFirst(re);
@@ -274,10 +272,12 @@ struct SemVerRange
                     }
                     break;
                 case "<":
+                    ranges[$-1] ~= SimpleRange(operator, semVer.appendPrerelease0);
+                    break;
                 case "<=":
                 case ">=":
                 case ">":
-                    if (operator == "<" || wildcard < ReleaseType.PRERELEASE)
+                    if (wildcard < ReleaseType.PRERELEASE)
                         semVer.appendPrerelease0;
                     ranges[$-1] ~= SimpleRange(operator, semVer);
                     break;
@@ -458,7 +458,7 @@ in
 }
 body
 {
-    auto found = semVers.sort.find!(a => satisfies(a, semVerRange));
+    auto found = semVers.sort!"a > b".find!(a => satisfies(a, semVerRange));
     return found.empty ? SemVer("invalid") : found[0];
 }
 
@@ -522,6 +522,7 @@ unittest
     assert(SemVer("1.0.12").satisfies(SemVerRange("~1.0.3")));
     assert(SemVer("1.0.0").satisfies(SemVerRange(">=1")));
     assert(SemVer("1.1.1").satisfies(SemVerRange("<1.2")));
+    assert(SemVer("1.1.9").satisfies(SemVerRange("<=1.2")));
     assert(SemVer("1.0.0-bet").satisfies(SemVerRange("1")));
     assert(SemVer("0.5.5").satisfies(SemVerRange("~v0.5.4-pre")));
     assert(SemVer("0.5.4").satisfies(SemVerRange("~v0.5.4-pre")));
@@ -590,6 +591,7 @@ unittest
     assert(!SemVer("1.1.0").satisfies(SemVerRange("~1.0")));
     assert(!SemVer("1.0.0").satisfies(SemVerRange("<1")));
     assert(!SemVer("1.1.1").satisfies(SemVerRange(">=1.2")));
+    assert(!SemVer("1.3.0").satisfies(SemVerRange("<=1.2")));
     assert(!SemVer("2.0.0-beta").satisfies(SemVerRange("1")));
     assert(!SemVer("0.5.4-alpha").satisfies(SemVerRange("~v0.5.4-beta")));
     assert(!SemVer("1.0.0-beta").satisfies(SemVerRange("<1")));
@@ -603,4 +605,8 @@ unittest
     assert(!SemVer("1.2.2").satisfies(SemVerRange("^1.2.3")));
     assert(!SemVer("1.1.9").satisfies(SemVerRange("^1.2")));
     assert(!SemVer("2.0.0-pre").satisfies(SemVerRange("^1.2.3")));
+
+    auto semVers = [SemVer("0.8.0"), SemVer("1.0.0"), SemVer("1.1.0")];
+    assert(semVers.maxSatisfying(SemVerRange("<=1.0.0")) == SemVer("1.0.0"));
+    assert(semVers.maxSatisfying(SemVerRange(">=1.0")) == SemVer("1.1.0"));
 }

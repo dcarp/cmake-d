@@ -5,16 +5,7 @@ import std.getopt;
 import std.json;
 import std.stdio;
 import std.string;
-
-
-struct Version
-{
-    uint major;
-    uint minor;
-    uint patch;
-
-    this(string )
-}
+import semver;
 
 /**
  * Finds the best match of $(D range) in $(D choices) versions list.
@@ -88,11 +79,15 @@ int main(string[] args)
 
     if (packageVersion.empty)
     {
-        node = root["versions"][0];
+        packageVersion = "*";
     }
-    else
+
+    auto versionRange = SemVerRange(packageVersion);
+
+    if (!versionRange.valid)
     {
-        auto range = root["versions"].array.find!"a[\"version\"].str == b"(packageVersion);
+        // try exact string match
+        auto range = root["versions"].array.find!`a["version"].str == b`(packageVersion);
         if (!range.empty)
         {
             node = range[0];
@@ -100,6 +95,23 @@ int main(string[] args)
         else
         {
             stderr.writefln("No version tagged '%s' found.", packageVersion);
+            return -1;
+        }
+    }
+    else
+    {
+        auto nodes = root["versions"].array.filter!(a => SemVer(a["version"].str).valid).array;
+        auto maxVersion = nodes.map!(a => SemVer(a["version"].str)).array.maxSatisfying(versionRange);
+
+        if (maxVersion.valid)
+        {
+            auto range = nodes.find!((a, b) => SemVer(a["version"].str) == b)(maxVersion);
+            assert(!range.empty);
+            node = range[0];
+        }
+        else
+        {
+            stderr.writefln("No version '%s' found.", versionRange);
             return -1;
         }
     }
