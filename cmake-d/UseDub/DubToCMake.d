@@ -21,6 +21,7 @@ int main(string[] args)
 
     string json = readText(dubFile);
     JSONValue root = parseJSON(json);
+    string target = root["targetName"].str;
 
     string cmake = q"<
 cmake_minimum_required(VERSION 2.8)
@@ -46,31 +47,31 @@ if(APP_MAIN_FILE)
 else(APP_MAIN_FILE)
     add_library(%1$s ${SRC_FILES})
 endif(APP_MAIN_FILE)
->".format(root["targetName"].str);
+>".format(target);
             break;
         case "none":
             break;
         case "executable":
             cmake ~= q"<
 add_executable(%s ${SRC_FILES} ${APP_MAIN_FILE})
->".format(root["targetName"].str);
+>".format(target);
             break;
         case "library":
             cmake ~= q"<
 add_library(%s ${SRC_FILES})
->".format(root["targetName"].str);
+>".format(target);
             break;
         case "sourceLibrary":
             break;
         case "staticLibrary":
             cmake ~= q"<
 add_library(%s STATIC ${SRC_FILES})
->".format(root["targetName"].str);
+>".format(target);
             break;
         case "dynamicLibrary":
             cmake ~= q"<
 add_library(%s SHARED ${SRC_FILES})
->".format(root["targetName"].str);
+>".format(target);
             break;
         default:
             assert(false, "Unknown targetType");
@@ -84,8 +85,8 @@ add_library(%s SHARED ${SRC_FILES})
         {
             cmake ~= "DubProject_Add(%s %s)\n".format(dependency, version_.str);
         }
+        cmake ~= "\nadd_dependencies(%s %-(%s %))\n".format(target, root["dependencies"].object.keys);
     }
-
 
     std.file.write(cmakeFile, cmake);
 

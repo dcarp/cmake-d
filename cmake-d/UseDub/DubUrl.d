@@ -94,24 +94,31 @@ int main(string[] args)
         }
         else
         {
-            stderr.writefln("No version tagged '%s' found.", packageVersion);
+            stderr.writefln("%s has no version tagged %s.", root["name"].str, packageVersion);
             return -1;
         }
     }
     else
     {
-        auto nodes = root["versions"].array.filter!(a => SemVer(a["version"].str).valid).array;
-        auto maxVersion = nodes.map!(a => SemVer(a["version"].str)).array.maxSatisfying(versionRange);
+        string nodeVersionString(JSONValue node)
+        {
+            auto ver = node["version"].str;
+            ver.skipOver('~');
+            return ver;
+        }
+
+        auto nodes = root["versions"].array.filter!(a => SemVer(nodeVersionString(a)).valid).array;
+        auto maxVersion = nodes.map!(a => SemVer(nodeVersionString(a))).array.maxSatisfying(versionRange);
 
         if (maxVersion.valid)
         {
-            auto range = nodes.find!((a, b) => SemVer(a["version"].str) == b)(maxVersion);
+            auto range = nodes.find!((a, b) => SemVer(nodeVersionString(a)) == b)(maxVersion);
             assert(!range.empty);
             node = range[0];
         }
         else
         {
-            stderr.writefln("No version '%s' found.", versionRange);
+            stderr.writefln("%s has no version %s.", root["name"].str, versionRange);
             return -1;
         }
     }
