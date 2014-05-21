@@ -13,7 +13,9 @@
 # See LICENSE for details.
 #
 
-set(DUB_DIRECTORY ${CMAKE_BINARY_DIR}/UseDub CACHE PATH "Dub packages direcotry")
+if(NOT DUB_DIRECTORY)
+	set(DUB_DIRECTORY ${CMAKE_BINARY_DIR}/UseDub CACHE PATH "Dub packages directory")
+endif(NOT DUB_DIRECTORY)
 
 set(DUB_REGISTRY "http://code.dlang.org/packages")
 file(MAKE_DIRECTORY ${DUB_DIRECTORY}/CMakeTmp)
@@ -23,25 +25,26 @@ if(NOT CMAKE_D_COMPILER)
 endif(NOT CMAKE_D_COMPILER)
 
 #compile json parsers
-if(NOT EXISTS ${DUB_DIRECTORY}/CMakeTmp/DubUrl OR 1)
+if(NOT EXISTS ${DUB_DIRECTORY}/CMakeTmp/DubUrl)
 	find_file(DUB_GET_PACKAGE_URL_D_SRC "DubUrl.d"
 		PATHS ${CMAKE_ROOT}/Modules ${CMAKE_MODULE_PATH} NO_DEFAULT_PATH
 		PATH_SUFFIXES "UseDub")
 	find_file(SEMVER_SRC "semver.d"
 		PATHS ${CMAKE_ROOT}/Modules ${CMAKE_MODULE_PATH} NO_DEFAULT_PATH
 		PATH_SUFFIXES "UseDub")
-	execute_process(COMMAND ${CMAKE_D_COMPILER} ${DUB_GET_PACKAGE_URL_D_SRC} ${SEMVER_SRC}
+	get_filename_component(SEMVER_PATH ${SEMVER_SRC} PATH)
+	execute_process(COMMAND ${CMAKE_D_COMPILER} -I${SEMVER_PATH} ${DUB_GET_PACKAGE_URL_D_SRC} ${SEMVER_SRC}
 		WORKING_DIRECTORY ${DUB_DIRECTORY}/CMakeTmp)
 	unset(DUB_GET_PACKAGE_URL_D_SRC CACHE)
-endif(NOT EXISTS ${DUB_DIRECTORY}/CMakeTmp/DubUrl OR 1)
-if(NOT EXISTS ${DUB_DIRECTORY}/CMakeTmp/DubToCMake OR 1)
+endif(NOT EXISTS ${DUB_DIRECTORY}/CMakeTmp/DubUrl)
+if(NOT EXISTS ${DUB_DIRECTORY}/CMakeTmp/DubToCMake)
 	find_file(DUB_PACKAGE_TO_CMAKE_D_SRC "DubToCMake.d"
 		PATHS ${CMAKE_ROOT}/Modules ${CMAKE_MODULE_PATH} NO_DEFAULT_PATH
 		PATH_SUFFIXES "UseDub")
 	execute_process(COMMAND ${CMAKE_D_COMPILER} ${DUB_PACKAGE_TO_CMAKE_D_SRC}
 		WORKING_DIRECTORY ${DUB_DIRECTORY}/CMakeTmp)
 	unset(DUB_PACKAGE_TO_CMAKE_D_SRC CACHE)
-endif(NOT EXISTS ${DUB_DIRECTORY}/CMakeTmp/DubToCMake OR 1)
+endif(NOT EXISTS ${DUB_DIRECTORY}/CMakeTmp/DubToCMake)
 
 include(ExternalProject)
 
@@ -61,8 +64,15 @@ function(DubProject_Add name)
 	include(${DUB_DIRECTORY}/${name}.cmake)
 
 	ExternalProject_Add(${name}
-		DOWNLOAD_DIR ${DUB_DIRECTORY}/${name}
+		DOWNLOAD_DIR ${DUB_DIRECTORY}/archive/${name}
+		SOURCE_DIR ${DUB_DIRECTORY}/source/${name}
 		URL ${DUB_PACKAGE_URL}
 		PATCH_COMMAND ${DUB_DIRECTORY}/CMakeTmp/DubToCMake -p package.json
-		CMAKE_CACHE_ARGS -DCMAKE_MODULE_PATH:PATH=${CMAKE_MODULE_PATH})
+		INSTALL_DIR ${DUB_DIRECTORY}/export
+		CMAKE_CACHE_ARGS
+			-DCMAKE_MODULE_PATH:PATH=${CMAKE_MODULE_PATH}
+			-DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
+			-DDUB_DIRECTORY:PATH=${DUB_DIRECTORY})
+
+	include_directories(${DUB_DIRECTORY}/source/${name}/source ${DUB_DIRECTORY}/source/${name}/src)
 endfunction()

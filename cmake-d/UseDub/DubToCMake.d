@@ -36,6 +36,8 @@ file(GLOB_RECURSE SRC_FILES source/*.d src/*.d)
 if(APP_MAIN_FILE)
     list(REMOVE_ITEM SRC_FILES ${APP_MAIN_FILE})
 endif(APP_MAIN_FILE)
+
+include_directories(source src)
 >".format(root["name"].str);
 
     switch ("targetType" in root.object ? root["targetType"].str : "autodetect")
@@ -77,6 +79,13 @@ add_library(%s SHARED ${SRC_FILES})
             assert(false, "Unknown targetType");
             break;
     }
+
+    cmake ~= q"<
+install(TARGETS %s
+    RUNTIME DESTINATION bin
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib)
+>".format(target);
 
     if ("dependencies" in root.object)
     {
