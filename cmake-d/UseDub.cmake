@@ -50,7 +50,13 @@ include(ExternalProject)
 
 function(DubProject_Add name)
 	if(NOT EXISTS ${DUB_DIRECTORY}/${name}.json)
-		file(DOWNLOAD ${DUB_REGISTRY}/${name}.json ${DUB_DIRECTORY}/${name}.json)
+		file(DOWNLOAD ${DUB_REGISTRY}/${name}.json ${DUB_DIRECTORY}/${name}.json STATUS status)
+		list(GET status 0 statusCode)
+		
+		if(NOT statusCode EQUAL 0)
+			file(REMOVE ${DUB_DIRECTORY}/${name}.json)
+			message(FATAL_ERROR "Failed to download ${DUB_REGISTRY}/${name}.json")
+		endif(NOT statusCode EQUAL 0)
 	endif(NOT EXISTS ${DUB_DIRECTORY}/${name}.json)
 
 	if(${ARGC} GREATER 1)
