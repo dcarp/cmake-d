@@ -22,7 +22,7 @@ SET (MOD_SRCS
 	FindGDCPath.cmake
 	UseDDoc.cmake
 	UseDDeps.cmake
-	UseDUB.cmake
+	UseDub.cmake
 	dependencies.cmake
 	UseDUnittest.cmake
 	FindPhobos.cmake
