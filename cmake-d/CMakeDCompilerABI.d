@@ -1,4 +1,5 @@
-string info_sizeof_dptr = "INFO" ":" "sizeof_dptr[" ~ sizeof(void*).stringof ~ "]";
+enum int sizeof_dptr = (void*).sizeof;
+string info_sizeof_dptr = "INFO" ":" "sizeof_dptr[" ~ sizeof_dptr.stringof ~ "]";
 
 int main(string[] args)
 {
