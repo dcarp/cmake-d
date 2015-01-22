@@ -54,7 +54,7 @@ SET(CMAKE_FIND_LIBRARY_SUFFIXES ".so" ".a")
 SET (CMAKE_D_FLAGS_INIT "")
 # DMD can only produce 32-bit binaries for now
 SET (CMAKE_D_LINK_FLAGS "")
-SET (CMAKE_D_FLAGS_DEBUG_INIT "-g -debug -L--export-dynamic ${DDOC_FLAGS}")
+SET (CMAKE_D_FLAGS_DEBUG_INIT "-g -d-debug -L--export-dynamic ${DDOC_FLAGS}")
 SET (CMAKE_D_FLAGS_MINSIZEREL_INIT "-Os ${DDOC_FLAGS}")
 SET (CMAKE_D_FLAGS_RELEASE_INIT "-O -release -inline ${DDOC_FLAGS}")
 SET (CMAKE_D_FLAGS_RELWITHDEBINFO_INIT "-O -g -L--export-dynamic ${DDOC_FLAGS}")
