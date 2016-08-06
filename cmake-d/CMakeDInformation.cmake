@@ -220,6 +220,7 @@ include(CMakeCommonLanguageInclude)
 # <OBJECT>
 # <LINK_LIBRARIES>
 # <FLAGS>
+# <INCLUDES> (cmake 3.4.0 or later)
 # <LINK_FLAGS>
 
 # D compiler information
@@ -261,8 +262,13 @@ set(CMAKE_D_ARCHIVE_FINISH "<CMAKE_RANLIB> <TARGET>")
 
 # compile a D file into an object file
 if(NOT CMAKE_D_COMPILE_OBJECT)
-  set(CMAKE_D_COMPILE_OBJECT
-   "<CMAKE_D_COMPILER> <FLAGS> ${CMAKE_D_DASH_O}<OBJECT> -c <SOURCE>")
+  if(CMAKE_VERSION VERSION_LESS 3.4.0)
+    set(CMAKE_D_COMPILE_OBJECT
+     "<CMAKE_D_COMPILER> <FLAGS> ${CMAKE_D_DASH_O}<OBJECT> -c <SOURCE>")
+  else()
+    set(CMAKE_D_COMPILE_OBJECT
+     "<CMAKE_D_COMPILER> <FLAGS> <INCLUDES> ${CMAKE_D_DASH_O}<OBJECT> -c <SOURCE>")
+  endif()
 endif()
 
 if(NOT CMAKE_D_LINK_EXECUTABLE)
