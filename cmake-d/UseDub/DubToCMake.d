@@ -35,7 +35,7 @@ find_file(APP_MAIN_FILE
 file(GLOB_RECURSE SRC_FILES source/*.d src/*.d)
 if(APP_MAIN_FILE)
     list(REMOVE_ITEM SRC_FILES ${APP_MAIN_FILE})
-endif(APP_MAIN_FILE)
+endif()
 
 include_directories(source src)
 >".format(root["name"].str);
@@ -46,9 +46,9 @@ include_directories(source src)
             cmake ~= q"<
 if(APP_MAIN_FILE)
     add_executable(%1$s ${SRC_FILES} ${APP_MAIN_FILE})
-else(APP_MAIN_FILE)
+else()
     add_library(%1$s ${SRC_FILES})
-endif(APP_MAIN_FILE)
+endif()
 >".format(target);
             break;
         case "none":

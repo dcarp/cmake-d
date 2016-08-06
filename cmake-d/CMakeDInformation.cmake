@@ -27,7 +27,7 @@ set(_INCLUDED_FILE 0)  # reset the indicator if an include occurred.
 
 if(CMAKE_D_COMPILER_ID)
   include(Compiler/${CMAKE_D_COMPILER_ID}-D OPTIONAL)
-endif(CMAKE_D_COMPILER_ID)
+endif()
 
 # set(CMAKE_D_OUTPUT_EXTENSION .o)
 set(CMAKE_C_OUTPUT_EXTENSION_REPLACE TRUE )
@@ -42,11 +42,11 @@ set(_INCLUDED_FILE 0)  # reset the indicator if an include occurred.
 if(CMAKE_SYSTEM_PROCESSOR)
   if(CMAKE_D_COMPILER_ID)
     include(Platform/${CMAKE_SYSTEM_NAME}-${CMAKE_D_COMPILER_ID}-D-${CMAKE_SYSTEM_PROCESSOR} OPTIONAL RESULT_VARIABLE _INCLUDED_FILE)
-  endif(CMAKE_D_COMPILER_ID)
+  endif()
   if(NOT _INCLUDED_FILE)
     include(Platform/${CMAKE_SYSTEM_NAME}-${CMAKE_BASE_NAME}-${CMAKE_SYSTEM_PROCESSOR} OPTIONAL)
-  endif(NOT _INCLUDED_FILE)
-endif(CMAKE_SYSTEM_PROCESSOR)
+  endif()
+endif()
 
 set(_INCLUDED_FILE 0)  # reset the indicator if an include occurred.
 
@@ -54,13 +54,13 @@ set(_INCLUDED_FILE 0)  # reset the indicator if an include occurred.
 if(CMAKE_D_COMPILER_ID)
   include(Platform/${CMAKE_SYSTEM_NAME}-${CMAKE_D_COMPILER_ID}-D
     OPTIONAL RESULT_VARIABLE _INCLUDED_FILE)
-endif(CMAKE_D_COMPILER_ID)
+endif()
 
 # if no high specificity file was included, then try a more general one
 if(NOT _INCLUDED_FILE)
   include(Platform/${CMAKE_SYSTEM_NAME}-${CMAKE_BASE_NAME}
     OPTIONAL RESULT_VARIABLE _INCLUDED_FILE)
-endif(NOT _INCLUDED_FILE)
+endif()
 
 # We specify the compiler information in the system file for some
 # platforms, but this language may not have been enabled when the file
@@ -68,7 +68,7 @@ endif(NOT _INCLUDED_FILE)
 # Remove this when all compiler info is removed from system files.
 if(NOT _INCLUDED_FILE)
   include(Platform/${CMAKE_SYSTEM_NAME} OPTIONAL)
-endif(NOT _INCLUDED_FILE)
+endif()
 
 
 # This should be included before the _INIT variables are
@@ -79,11 +79,11 @@ endif(NOT _INCLUDED_FILE)
 
 if(CMAKE_USER_MAKE_RULES_OVERRIDE)
    include(${CMAKE_USER_MAKE_RULES_OVERRIDE})
-endif(CMAKE_USER_MAKE_RULES_OVERRIDE)
+endif()
 
 if(CMAKE_USER_MAKE_RULES_OVERRIDE_D)
    include(${CMAKE_USER_MAKE_RULES_OVERRIDE_D})
-endif(CMAKE_USER_MAKE_RULES_OVERRIDE_D)
+endif()
 
 # Lines below was taken from CMakeCXXInformation.cmake
 # Not all of this flags are available on D compilers for now, but some as OPTIONS_PIC are.
@@ -162,7 +162,7 @@ endif()
 if(NOT CMAKE_MODULE_EXISTS)
   set(CMAKE_SHARED_MODULE_D_FLAGS ${CMAKE_SHARED_LIBRARY_D_FLAGS})
   set(CMAKE_SHARED_MODULE_CREATE_D_FLAGS ${CMAKE_SHARED_LIBRARY_CREATE_D_FLAGS})
-endif(NOT CMAKE_MODULE_EXISTS)
+endif()
 
 # repeat for modules
 if(NOT CMAKE_SHARED_MODULE_CREATE_D_FLAGS)
@@ -177,7 +177,7 @@ set(CMAKE_D_FLAGS_INIT "$ENV{DFLAGS} ${CMAKE_D_FLAGS_INIT}")
 # avoid just having a space as the initial value for the cache
 if(CMAKE_D_FLAGS_INIT STREQUAL " ")
   set(CMAKE_D_FLAGS_INIT)
-endif(CMAKE_D_FLAGS_INIT STREQUAL " ")
+endif()
 set(CMAKE_D_FLAGS "${CMAKE_D_FLAGS_INIT}" CACHE STRING
      "Flags used by the D compiler during all build types.")
 
@@ -186,7 +186,7 @@ if(NOT CMAKE_NOT_USING_CONFIG_FLAGS)
   if(NOT CMAKE_NO_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE ${CMAKE_BUILD_TYPE_INIT} CACHE STRING
       "Choose the type of build, options are: None(CMAKE_D_FLAGS used) Debug Release RelWithDebInfo MinSizeRel.")
-  endif(NOT CMAKE_NO_BUILD_TYPE)
+  endif()
   set(CMAKE_D_FLAGS_DEBUG "${CMAKE_D_FLAGS_DEBUG_INIT}" CACHE STRING
     "Flags used by the compiler during debug builds.")
   set(CMAKE_D_FLAGS_MINSIZEREL "${CMAKE_D_FLAGS_MINSIZEREL_INIT}" CACHE STRING
@@ -195,13 +195,13 @@ if(NOT CMAKE_NOT_USING_CONFIG_FLAGS)
     "Flags used by the compiler during release builds (/MD /Ob1 /Oi /Ot /Oy /Gs will produce slightly less optimized but smaller files).")
   set(CMAKE_D_FLAGS_RELWITHDEBINFO "${CMAKE_D_FLAGS_RELWITHDEBINFO_INIT}" CACHE STRING
     "Flags used by the compiler during Release with Debug Info builds.")
-endif(NOT CMAKE_NOT_USING_CONFIG_FLAGS)
+endif()
 
 if(CMAKE_D_STANDARD_LIBRARIES_INIT)
   set(CMAKE_D_STANDARD_LIBRARIES "${CMAKE_D_STANDARD_LIBRARIES_INIT}"
     CACHE STRING "Libraries linked by default with all D applications.")
   mark_as_advanced(CMAKE_D_STANDARD_LIBRARIES)
-endif(CMAKE_D_STANDARD_LIBRARIES_INIT)
+endif()
 
 include(CMakeCommonLanguageInclude)
 
@@ -235,23 +235,23 @@ include(CMakeCommonLanguageInclude)
 # < 2.8.10 backward compatibility
 if(NOT CMAKE_PLATFORM_INFO_DIR)
   set(CMAKE_PLATFORM_INFO_DIR ${CMAKE_BINARY_DIR}${CMAKE_FILES_DIRECTORY})
-endif(NOT CMAKE_PLATFORM_INFO_DIR)
+endif()
 
 # create a D shared library
 if(NOT CMAKE_D_CREATE_SHARED_LIBRARY)
 	set(CMAKE_D_CREATE_SHARED_LIBRARY
 		"<CMAKE_D_COMPILER> <CMAKE_SHARED_LIBRARY_D_FLAGS> <LANGUAGE_COMPILE_FLAGS> <LINK_FLAGS> <CMAKE_SHARED_LIBRARY_CREATE_D_FLAGS> <CMAKE_SHARED_LIBRARY_SONAME_D_FLAG><TARGET_SONAME> ${CMAKE_D_DASH_O}<TARGET> <OBJECTS> <LINK_LIBRARIES> ${DSTDLIB_FLAGS} ${CMAKE_D_STDLIBS}")
-endif(NOT CMAKE_D_CREATE_SHARED_LIBRARY)
+endif()
 
 # create a D shared module just copy the shared library rule
 if(NOT CMAKE_D_CREATE_SHARED_MODULE)
   set(CMAKE_D_CREATE_SHARED_MODULE "${CMAKE_D_CREATE_SHARED_LIBRARY}")
-endif(NOT CMAKE_D_CREATE_SHARED_MODULE)
+endif()
 
 if(NOT CMAKE_D_CREATE_STATIC_LIBRARY AND CMAKE_STATIC_LIBRARY_CREATE_D_FLAGS)
 	set(CMAKE_D_CREATE_STATIC_LIBRARY
 		"<CMAKE_D_COMPILER> ${CMAKE_STATIC_LIBRARY_CREATE_D_FLAGS} <OBJECTS> ${CMAKE_D_DASH_O}<TARGET>")
-endif(NOT CMAKE_D_CREATE_STATIC_LIBRARY AND CMAKE_STATIC_LIBRARY_CREATE_D_FLAGS)
+endif()
 
 # Create a static archive incrementally for large object file counts.
 # If CMAKE_D_CREATE_STATIC_LIBRARY is set it will override these.
@@ -261,20 +261,20 @@ set(CMAKE_D_ARCHIVE_FINISH "<CMAKE_RANLIB> <TARGET>")
 
 # compile a D file into an object file
 if(NOT CMAKE_D_COMPILE_OBJECT)
-    set(CMAKE_D_COMPILE_OBJECT
-     "<CMAKE_D_COMPILER> <FLAGS> ${CMAKE_D_DASH_O}<OBJECT> -c <SOURCE>")
-endif(NOT CMAKE_D_COMPILE_OBJECT)
+  set(CMAKE_D_COMPILE_OBJECT
+   "<CMAKE_D_COMPILER> <FLAGS> ${CMAKE_D_DASH_O}<OBJECT> -c <SOURCE>")
+endif()
 
 if(NOT CMAKE_D_LINK_EXECUTABLE)
   set(CMAKE_D_LINK_EXECUTABLE
     "<CMAKE_D_COMPILER> <FLAGS> <CMAKE_D_LINK_FLAGS> <LINK_FLAGS> <OBJECTS> ${CMAKE_D_DASH_O}<TARGET> <LINK_LIBRARIES> ${CMAKE_D_STDLIBS}")
-endif(NOT CMAKE_D_LINK_EXECUTABLE)
+endif()
 
 mark_as_advanced(
-CMAKE_D_FLAGS
-CMAKE_D_FLAGS_DEBUG
-CMAKE_D_FLAGS_MINSIZEREL
-CMAKE_D_FLAGS_RELEASE
-CMAKE_D_FLAGS_RELWITHDEBINFO
-)
+  CMAKE_D_FLAGS
+  CMAKE_D_FLAGS_DEBUG
+  CMAKE_D_FLAGS_MINSIZEREL
+  CMAKE_D_FLAGS_RELEASE
+  CMAKE_D_FLAGS_RELWITHDEBINFO)
+
 set(CMAKE_D_INFORMATION_LOADED 1)

@@ -15,14 +15,14 @@
 
 if(NOT DUB_DIRECTORY)
 	set(DUB_DIRECTORY ${CMAKE_BINARY_DIR}/UseDub CACHE PATH "Dub packages directory")
-endif(NOT DUB_DIRECTORY)
+endif()
 
 set(DUB_REGISTRY "http://code.dlang.org/packages")
 file(MAKE_DIRECTORY ${DUB_DIRECTORY}/CMakeTmp)
 
 if(NOT CMAKE_D_COMPILER)
 	message(FATAL_ERROR "UseDub needs a D compiler or use it in a D project.")
-endif(NOT CMAKE_D_COMPILER)
+endif()
 
 #compile json parsers
 if(NOT EXISTS ${DUB_DIRECTORY}/CMakeTmp/DubUrl)
@@ -36,7 +36,7 @@ if(NOT EXISTS ${DUB_DIRECTORY}/CMakeTmp/DubUrl)
 	execute_process(COMMAND ${CMAKE_D_COMPILER} -I${SEMVER_PATH} ${DUB_GET_PACKAGE_URL_D_SRC} ${SEMVER_SRC}
 		WORKING_DIRECTORY ${DUB_DIRECTORY}/CMakeTmp)
 	unset(DUB_GET_PACKAGE_URL_D_SRC CACHE)
-endif(NOT EXISTS ${DUB_DIRECTORY}/CMakeTmp/DubUrl)
+endif()
 if(NOT EXISTS ${DUB_DIRECTORY}/CMakeTmp/DubToCMake)
 	find_file(DUB_PACKAGE_TO_CMAKE_D_SRC "DubToCMake.d"
 		PATHS ${CMAKE_ROOT}/Modules ${CMAKE_MODULE_PATH} NO_DEFAULT_PATH
@@ -44,7 +44,7 @@ if(NOT EXISTS ${DUB_DIRECTORY}/CMakeTmp/DubToCMake)
 	execute_process(COMMAND ${CMAKE_D_COMPILER} ${DUB_PACKAGE_TO_CMAKE_D_SRC}
 		WORKING_DIRECTORY ${DUB_DIRECTORY}/CMakeTmp)
 	unset(DUB_PACKAGE_TO_CMAKE_D_SRC CACHE)
-endif(NOT EXISTS ${DUB_DIRECTORY}/CMakeTmp/DubToCMake)
+endif()
 
 include(ExternalProject)
 
@@ -56,16 +56,16 @@ function(DubProject_Add name)
 		if(NOT statusCode EQUAL 0)
 			file(REMOVE ${DUB_DIRECTORY}/${name}.json)
 			message(FATAL_ERROR "Failed to download ${DUB_REGISTRY}/${name}.json")
-		endif(NOT statusCode EQUAL 0)
-	endif(NOT EXISTS ${DUB_DIRECTORY}/${name}.json)
+		endif()
+	endif()
 
 	if(${ARGC} GREATER 1)
 		execute_process(COMMAND ${DUB_DIRECTORY}/CMakeTmp/DubUrl -p ${name}.json -t ${ARGN}
 			WORKING_DIRECTORY ${DUB_DIRECTORY})
-	else(${ARGC} GREATER 1)
+	else()
 		execute_process(COMMAND ${DUB_DIRECTORY}/CMakeTmp/DubUrl -p ${name}.json
 			WORKING_DIRECTORY ${DUB_DIRECTORY})
-	endif(${ARGC} GREATER 1)
+	endif()
 
 	include(${DUB_DIRECTORY}/${name}.cmake)
 

@@ -1,2 +1,2 @@
-ADD_EXECUTABLE( app_1 app_1.d )
-ADD_TEST( app_1 app_1 )
+add_executable(app_1 app_1.d)
+add_test(app_1 app_1)

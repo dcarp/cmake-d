@@ -9,10 +9,10 @@
 #
 # See LICENSE for details.
 #
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8.1)
-PROJECT (cmake-d NONE)
+cmake_minimum_required(VERSION 2.8.1)
+project(cmake-d NONE)
 
-SET (MOD_SRCS
+set(MOD_SRCS
 	CMakeDCompiler.cmake.in        
 	CMakeDCompilerId.d.in        
 	CMakeDInformation.cmake        
@@ -29,7 +29,7 @@ SET (MOD_SRCS
 	CMakePlatformId.di.in
 )
 
-SET (PLAT_SRCS
+set(PLAT_SRCS
 	Platform/Linux-dmd.cmake
 	Platform/Linux-gdc.cmake 
 	Platform/Linux-ldc2.cmake 
@@ -37,5 +37,5 @@ SET (PLAT_SRCS
 	Platform/Windows-gdc.cmake
 )
 
-INSTALL (FILES ${MOD_SRCS} DESTINATION ${CMAKE_ROOT}/Modules)
-INSTALL (FILES ${PLAT_SRCS} DESTINATION ${CMAKE_ROOT}/Modules/Platform)
+install(FILES ${MOD_SRCS} DESTINATION ${CMAKE_ROOT}/Modules)
+install(FILES ${PLAT_SRCS} DESTINATION ${CMAKE_ROOT}/Modules/Platform)

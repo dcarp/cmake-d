@@ -38,12 +38,9 @@ set(GDC_POSSIBLE_INCLUDE_PATHS
   /usr/include/d/3.4.3
   /usr/include/d/3.4.2
   /usr/include/d/3.4.1
-  /usr/include/d/3.4.0
-  )
+  /usr/include/d/3.4.0)
 
 find_path(GDC_INCLUDE_PATH object.d
   ${GDC_POSSIBLE_INCLUDE_PATHS})
 
-mark_as_advanced(
-  GDC_INCLUDE_PATH
-  )
+mark_as_advanced(GDC_INCLUDE_PATH)

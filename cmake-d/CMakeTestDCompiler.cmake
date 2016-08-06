@@ -29,7 +29,7 @@ if(NOT CMAKE_D_COMPILER_WORKS)
     ${CMAKE_PLATFORM_INFO_DIR}/CMakeTmp/testDCompiler.d
     OUTPUT_VARIABLE OUTPUT)
   set(D_TEST_WAS_RUN 1)
-endif(NOT CMAKE_D_COMPILER_WORKS)
+endif()
 
 if(NOT CMAKE_D_COMPILER_WORKS)
   PrintTestCompilerStatus("D" " -- broken")
@@ -46,19 +46,19 @@ if(NOT CMAKE_D_COMPILER_WORKS)
     "is not able to compile a simple test program.\nIt fails "
     "with the following output:\n ${OUTPUT}\n\n"
     "CMake will not be able to correctly generate this project.")
-else(NOT CMAKE_D_COMPILER_WORKS)
+else()
   if(D_TEST_WAS_RUN)
     message(STATUS "Check for working D compiler: ${CMAKE_D_COMPILER} -- works")
     file(APPEND ${CMAKE_PLATFORM_INFO_DIR}/CMakeOutput.log
       "Determining if the D compiler works passed with "
       "the following output:\n${OUTPUT}\n\n")
-  endif(D_TEST_WAS_RUN)
+  endif()
   set(CMAKE_D_COMPILER_WORKS 1 CACHE INTERNAL "")
 
   if(CMAKE_D_COMPILER_FORCED)
     # The compiler configuration was forced by the user.
     # Assume the user has configured all compiler information.
-  else(CMAKE_D_COMPILER_FORCED)
+  else()
     # Try to identify the ABI and configure it into CMakeDCompiler.cmake
     include(${CMAKE_ROOT}/Modules/CMakeDetermineCompilerABI.cmake)
     find_file(CMAKE_D_COMPILER_ABI_SRC CMakeDCompilerABI.d PATHS ${CMAKE_ROOT}/Modules
@@ -74,5 +74,5 @@ else(NOT CMAKE_D_COMPILER_WORKS)
     include(${CMAKE_PLATFORM_INFO_DIR}/CMakeDCompiler.cmake)
     unset(CMAKE_D_COMPILER_ABI_SRC CACHE)
     unset(CMAKE_D_COMPILER_CMAKE_IN CACHE)
-  endif(CMAKE_D_COMPILER_FORCED)
-endif(NOT CMAKE_D_COMPILER_WORKS)
+  endif()
+endif()
