@@ -29,7 +29,7 @@ macro(target_add_unittests _target _sourceFiles)
     separate_arguments(CMAKE_D_FLAGS)
 
     add_test(NAME ${_testname}
-        COMMAND ${CMAKE_D_COMPILER} ${CMAKE_D_FLAGS} ${INCLUDES} -unittest -main ${SOURCEFILES})
+        COMMAND ${CMAKE_D_COMPILER} ${CMAKE_D_FLAGS} ${INCLUDES} -of${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${_testname} -unittest -main ${SOURCEFILES})
 endmacro()
 
 macro(add_unittests _sourcefile)
