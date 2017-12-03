@@ -36,7 +36,11 @@ macro(target_add_unittests _target _sourceFileList)
         list(APPEND SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/${src}")
     endforeach()
 
+
+    add_test(NAME build_${_testtarget}
+        COMMAND ${CMAKE_D_COMPILER} ${CMAKE_D_FLAGS} ${CMAKE_D_COMPILE_OPTIONS_PIC} ${INCLUDES} ${CMAKE_LIBRARY_PATH_FLAG}${CMAKE_LIBRARY_OUTPUT_DIRECTORY} ${LIBS} -of${CMAKE_CURRENT_SOURCE_DIR}/${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${_testtarget} ${SOURCES} -unittest ${main_unittest})
+
     add_test(NAME ${_testtarget}
-        COMMAND ${CMAKE_D_COMPILER} ${CMAKE_D_FLAGS} ${CMAKE_D_COMPILE_OPTIONS_PIC} ${INCLUDES} ${CMAKE_LIBRARY_PATH_FLAG}${CMAKE_LIBRARY_OUTPUT_DIRECTORY} ${LIBS} -of${CMAKE_CURRENT_SOURCE_DIR}/${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${_testtarget} ${SOURCES} -unittest -run ${main_unittest})
+        COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${_testtarget})
     set_tests_properties(${_testtarget} PROPERTIES ENVIRONMENT "LD_LIBRARY_PATH=${CMAKE_CURRENT_SOURCE_DIR}/${CMAKE_LIBRARY_OUTPUT_DIRECTORY}")
 endmacro()
