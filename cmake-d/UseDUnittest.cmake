@@ -7,7 +7,7 @@
 # See LICENSE for details.
 #
 
-macro(_add_unittests _TEST_TARGET _TEST_SOURCES _INCLUDE_DIRECTORIES _LINK_LIBRARIES)
+macro(_add_unittests _TEST_TARGET _SOURCES _INCLUDE_DIRECTORIES _LINK_LIBRARIES)
     set(_TEST_FLAGS "${CMAKE_D_FLAGS_DEBUG_INIT}")
     separate_arguments(_TEST_FLAGS)
     
@@ -34,6 +34,11 @@ macro(_add_unittests _TEST_TARGET _TEST_SOURCES _INCLUDE_DIRECTORIES _LINK_LIBRA
         endforeach()
     #endif()
 
+    set(_TEST_SOURCES )
+    foreach(_SOURCE ${_SOURCES})
+        list(APPEND _TEST_LINK_LIBRARIES "${CMAKE_CURRENT_SOURCE_DIR}/${_SOURCE}")
+    endforeach()
+
     if(CMAKE_LIBRARY_OUTPUT_DIRECTORY)
         set(_TEST_LIBRARY_PATH "${CMAKE_LIBRARY_PATH_FLAG}${CMAKE_LIBRARY_OUTPUT_DIRECTORY}")
     endif()
@@ -56,7 +61,7 @@ macro(add_unittests_for_target _TARGET)
 
         _add_unittests(${_TEST_TARGET} "${_TARGET_TEST_SOURCES}" "${_TARGET_INCLUDE_DIRECTORIES}" "${_TARGET_LINK_LIBRARIES}")
     else()
-        message(SEND_ERROR "cannot add unittests for a source file less target")
+        message(SEND_ERROR "cannot add unittests for target ${TARGET }with no source files")
     endif()
 endmacro()
 

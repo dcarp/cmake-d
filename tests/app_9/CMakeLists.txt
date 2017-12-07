@@ -1,8 +1,4 @@
-cmake_minimum_required(VERSION 3.0)
-project (test D)
 include(UseDUnittest)
-
-set(CMAKE_BUILD_TYPE DEBUG)
 
 enable_testing()
 
@@ -11,10 +7,10 @@ enable_testing()
 # I don't want to miss new unittests
 
 # add all files
-file(GLOB files RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "module*.d")
+set(files "moduleA.d" "moduleB.d")
 foreach(file IN LISTS files)
   add_unittests(${file})
 endforeach()
 
-add_library(foo ${files})
-add_unittests_for_target(foo)
+add_library(app_9_targettest ${files})
+add_unittests_for_target(app_9_targettest)
