@@ -1,6 +1,8 @@
 # Tell cmake our project only concerns the D language.
 cmake_minimum_required(VERSION 2.8.1)
 
+set(CMAKE_BUILD_TYPE Debug)
+
 # We must explicitly indicate we're using the D language
 # in the project declaration.  Listing other languages
 # is fine.
