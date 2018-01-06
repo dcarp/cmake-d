@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/dcarp/cmake-d.png)](https://travis-ci.org/dcarp/cmake-d)
+
 cmake-d
 =======
 
