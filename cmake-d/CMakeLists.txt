@@ -30,6 +30,8 @@ set(MOD_SRCS
 )
 
 set(PLAT_SRCS
+	Platform/Darwin-dmd.cmake
+	Platform/Darwin-ldc2.cmake
 	Platform/Linux-dmd.cmake
 	Platform/Linux-gdc.cmake 
 	Platform/Linux-ldc2.cmake 

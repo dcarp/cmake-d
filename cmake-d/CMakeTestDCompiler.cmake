@@ -15,6 +15,10 @@
 
 include(CMakeTestCompilerCommon)
 
+# Remove any cached result from an older CMake version.
+# We now store this in CMakeCCompiler.cmake.
+unset(CMAKE_D_COMPILER_WORKS CACHE)
+
 # This file is used by EnableLanguage in cmGlobalGenerator to
 # determine that that selected D compiler can actually compile
 # and link the most basic of programs.   If not, a fatal error
