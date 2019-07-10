@@ -114,5 +114,5 @@ else
    getting matched.  Store it in a pointer rather than an array
    because some compilers will just produce instructions to fill the
    array rather than assigning a pointer to a static array.  */
-string info_platform = "INFO" ":" "platform[" ~ PLATFORM_ID ~ "]";
-string info_arch = "INFO" ":" "arch[" ~ ARCHITECTURE_ID ~"]";
+string info_platform = "INFO" ~ ":" ~ "platform[" ~ PLATFORM_ID ~ "]";
+string info_arch = "INFO" ~ ":" ~ "arch[" ~ ARCHITECTURE_ID ~ "]";
