@@ -47,16 +47,24 @@ unittest
 
 int main(string[] args)
 {
+    string registryUrl = "https://code.dlang.org/packages";
     string registryFile = "";
     string packageVersion = "";
     bool listVersions;
     string outputPath = ".";
 
     getopt(args,
+           "registry|r", &registryUrl,
            "package|p", &registryFile,
            "tag|t", &packageVersion,
            "list|l", &listVersions,
            "output|o", &outputPath);
+
+    if (registryUrl.empty)
+    {
+        stderr.writeln("Package registryUrl must be specified.");
+        return -1;
+    }
 
     if (registryFile.empty)
     {
@@ -126,21 +134,21 @@ int main(string[] args)
     if (registryFile.endsWith(".json"))
     {
         registryFile = registryFile[0..$-5];
-    }   
-    
+    }
+
     if (listVersions)
     {
         writefln("Package '%s'", registryFile);
-        
+
         foreach(n; root["versions"].array)
         {
-            writefln("  %s => %s", n["version"].str, n["downloadUrl"].str);
+            writefln("  %s => %s", n["version"].str);
         }
     }
 
     packageVersion = node["version"].str;
-    auto packageUrl = node["downloadUrl"].str;
     auto packageName = root["name"].str;
+    auto packageUrl = registryUrl ~ "/" ~ packageName ~ "/" ~ packageVersion ~ ".zip";
 
     if (!outputPath.isDir)
     {

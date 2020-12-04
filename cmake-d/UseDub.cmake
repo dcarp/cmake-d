@@ -3,7 +3,7 @@
 #
 # DUB_DIRECTORY = the full path to Dub pacakges
 #
-# DubProject_Add(<dub_package> [version]) 
+# DubProject_Add(<dub_package> [version])
 #
 #============================================================================
 #  Copyright (c) 2014 Dragos Carp <dragos.carp@gmail.com>
@@ -17,7 +17,7 @@ if(NOT DUB_DIRECTORY)
 	set(DUB_DIRECTORY ${CMAKE_BINARY_DIR}/UseDub CACHE PATH "Dub packages directory")
 endif()
 
-set(DUB_REGISTRY "http://code.dlang.org/packages")
+set(DUB_REGISTRY "https://code.dlang.org/packages")
 file(MAKE_DIRECTORY ${DUB_DIRECTORY}/CMakeTmp)
 
 if(NOT CMAKE_D_COMPILER)
@@ -52,7 +52,7 @@ function(DubProject_Add name)
 	if(NOT EXISTS ${DUB_DIRECTORY}/${name}.json)
 		file(DOWNLOAD ${DUB_REGISTRY}/${name}.json ${DUB_DIRECTORY}/${name}.json STATUS status)
 		list(GET status 0 statusCode)
-		
+
 		if(NOT statusCode EQUAL 0)
 			file(REMOVE ${DUB_DIRECTORY}/${name}.json)
 			message(FATAL_ERROR "Failed to download ${DUB_REGISTRY}/${name}.json")
@@ -60,10 +60,10 @@ function(DubProject_Add name)
 	endif()
 
 	if(${ARGC} GREATER 1)
-		execute_process(COMMAND ${DUB_DIRECTORY}/CMakeTmp/DubUrl -p ${name}.json -t ${ARGN}
+		execute_process(COMMAND ${DUB_DIRECTORY}/CMakeTmp/DubUrl -p ${name}.json -r ${DUB_REGISTRY} -t ${ARGN}
 			WORKING_DIRECTORY ${DUB_DIRECTORY})
 	else()
-		execute_process(COMMAND ${DUB_DIRECTORY}/CMakeTmp/DubUrl -p ${name}.json
+		execute_process(COMMAND ${DUB_DIRECTORY}/CMakeTmp/DubUrl -p ${name}.json -r ${DUB_REGISTRY}
 			WORKING_DIRECTORY ${DUB_DIRECTORY})
 	endif()
 
