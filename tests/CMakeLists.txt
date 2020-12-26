@@ -1,5 +1,5 @@
 # Tell cmake our project only concerns the D language.
-cmake_minimum_required(VERSION 2.8.1)
+cmake_minimum_required(VERSION 2.8.12)
 
 set(CMAKE_BUILD_TYPE Debug)
 
