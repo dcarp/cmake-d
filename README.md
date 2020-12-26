@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/dcarp/cmake-d.png)](https://travis-ci.org/dcarp/cmake-d)
+![Build Status](https://github.com/dcarp/cmake-d/workflows/CI/badge.svg)
 
 cmake-d
 =======

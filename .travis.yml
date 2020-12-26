@@ -1,3 +1,0 @@
-language: d
-sudo: false
-script: cd tests && ./run_tests.sh
