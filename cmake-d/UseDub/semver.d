@@ -6,7 +6,7 @@ import std.regex;
 import std.stdio;
 import std.string;
 
-enum ReleaseType
+enum ReleaseType: int
 {
     MAJOR,
     MINOR,
@@ -87,13 +87,14 @@ struct SemVer
     {
         assert(result.valid);
     }
-    body
+    do
     {
+        int rType = cast(int) releaseType;
         SemVer result = "0";
-        foreach (i; 0..releaseType)
+        foreach (i; 0..rType)
             result.ids[i] = this.ids[i];
-        if (releaseType != ReleaseType.PRERELEASE)
-            result.ids[releaseType] = this.ids[releaseType]+1;
+        if (rType != ReleaseType.PRERELEASE)
+            result.ids[rType] = this.ids[rType]+1;
         return result;
     }
 
@@ -121,7 +122,7 @@ struct SemVer
         assert(this.valid);
         assert(v.valid);
     }
-    body
+    do
     {
         foreach (i; 0..ids.length)
         {
@@ -413,7 +414,7 @@ struct SemVerRange
         assert(["<", "<=", "=", ">=", ">"].canFind(simpleRange.op));
         assert(simpleRange.semVer.valid);
     }
-    body
+    do
     {
         switch (simpleRange.op)
         {
@@ -438,7 +439,7 @@ struct SemVerRange
         assert(semVer.valid);
         assert(valid);
     }
-    body
+    do
     {
         return ranges.any!(r => r.all!(s => simpleRangeSatisfiedBy(s, semVer)));
     }
@@ -456,7 +457,7 @@ in
     assert(semVers.all!"a.valid");
     assert(semVerRange.valid);
 }
-body
+do
 {
     auto found = semVers.sort!"a > b".find!(a => satisfies(a, semVerRange));
     return found.empty ? SemVer("invalid") : found[0];

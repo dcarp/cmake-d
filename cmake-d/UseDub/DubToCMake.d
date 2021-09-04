@@ -1,26 +1,28 @@
+import std.algorithm;
 import std.file;
 import std.getopt;
 import std.json;
 import std.stdio;
 import std.string;
+import std.process;
 
 int main(string[] args)
 {
-    string dubFile = "dub.json";
     string cmakeFile = "CMakeLists.txt";
+    string dubFile = "";
 
     getopt(args,
            "package|p", &dubFile,
            "output|o", &cmakeFile);
 
-    if (!exists(dubFile))
+    if (dubFile != "")
     {
-        stderr.writefln("Cannot find file: '%s'", dubFile);
-        return -1;
+        stderr.writeln("-p is deprecated and does not have any effect anymore. Please keep the default package file name.");
     }
 
-    string json = readText(dubFile);
-    JSONValue root = parseJSON(json);
+    string json = execute(["dub", "describe"]).output;
+    JSONValue dubRoot = parseJSON(json);
+    JSONValue root = dubRoot["packages"][0];
     string target = root["targetName"].str;
 
     string cmake = q"<
@@ -87,14 +89,15 @@ install(TARGETS %s
     ARCHIVE DESTINATION lib)
 >".format(target);
 
-    if ("dependencies" in root.object)
+    if ("dependencies" in root.object && root["dependencies"].array.length > 0)
     {
         cmake ~= "\ninclude(UseDub)\n";
-        foreach (dependency, version_; root["dependencies"].object)
+        foreach (dependency; root["dependencies"].array)
         {
-            cmake ~= "DubProject_Add(%s %s)\n".format(dependency, version_.str);
+            string version_ = "~" ~ dubRoot["packages"].array.find!((obj) => obj["name"] == dependency)[0]["version"].str;
+            cmake ~= "DubProject_Add(%s %s)\n".format(dependency, version_);
         }
-        cmake ~= "\nadd_dependencies(%s %-(%s %))\n".format(target, root["dependencies"].object.keys);
+        cmake ~= "\nadd_dependencies(%s %-(%s %))\n".format(target, root["dependencies"].array);
     }
 
     std.file.write(cmakeFile, cmake);
