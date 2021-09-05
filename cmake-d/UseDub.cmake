@@ -46,7 +46,7 @@ if(NOT EXISTS ${DUB_DIRECTORY}/CMakeTmp/DubToCMake)
 	unset(DUB_PACKAGE_TO_CMAKE_D_SRC CACHE)
 endif()
 
-include(ExternalProject)
+include(FetchContent)
 
 function(DubProject_Add name)
 	if(NOT EXISTS ${DUB_DIRECTORY}/${name}.json)
@@ -69,16 +69,10 @@ function(DubProject_Add name)
 
 	include(${DUB_DIRECTORY}/${name}.cmake)
 
-	ExternalProject_Add(${name}
-		DOWNLOAD_DIR ${DUB_DIRECTORY}/archive/${name}
-		SOURCE_DIR ${DUB_DIRECTORY}/source/${name}
-		URL ${DUB_PACKAGE_URL}
-		PATCH_COMMAND ${DUB_DIRECTORY}/CMakeTmp/DubToCMake -p package.json
-		INSTALL_DIR ${DUB_DIRECTORY}/export
-		CMAKE_CACHE_ARGS
-			-DCMAKE_MODULE_PATH:PATH=${CMAKE_MODULE_PATH}
-			-DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
-			-DDUB_DIRECTORY:PATH=${DUB_DIRECTORY})
-
-	include_directories(${DUB_DIRECTORY}/source/${name}/source ${DUB_DIRECTORY}/source/${name}/src)
+	FetchContent_Declare(
+			${name}
+			URL ${DUB_PACKAGE_URL}
+			PATCH_COMMAND ${DUB_DIRECTORY}/CMakeTmp/DubToCMake
+	)
+	FetchContent_MakeAvailable(${name})
 endfunction()

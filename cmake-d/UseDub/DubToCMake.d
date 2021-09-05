@@ -34,13 +34,13 @@ find_file(APP_MAIN_FILE
     NAMES app.d main.d %1$s/main.d %1$s/app.d
     PATHS source src NO_DEFAULT_PATH)
 
-file(GLOB_RECURSE SRC_FILES source/*.d src/*.d)
+file(GLOB_RECURSE SRC_FILES %-(%s/*.d %))
 if(APP_MAIN_FILE)
     list(REMOVE_ITEM SRC_FILES ${APP_MAIN_FILE})
 endif()
 
 include_directories(source src)
->".format(root["name"].str);
+>".format(root["name"].str, root["importPaths"].array);
 
     switch ("targetType" in root.object ? root["targetType"].str : "autodetect")
     {
@@ -83,6 +83,10 @@ add_library(%s SHARED ${SRC_FILES})
     }
 
     cmake ~= q"<
+target_include_directories(%s PUBLIC %-(%s %))
+>".format(target, root["importPaths"].array);
+
+    cmake ~= q"<
 install(TARGETS %s
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib
@@ -97,7 +101,7 @@ install(TARGETS %s
             string version_ = "~" ~ dubRoot["packages"].array.find!((obj) => obj["name"] == dependency)[0]["version"].str;
             cmake ~= "DubProject_Add(%s %s)\n".format(dependency, version_);
         }
-        cmake ~= "\nadd_dependencies(%s %-(%s %))\n".format(target, root["dependencies"].array);
+        cmake ~= "\ntarget_link_libraries(%s %-(%s %))\n".format(target, root["dependencies"].array);
     }
 
     std.file.write(cmakeFile, cmake);
