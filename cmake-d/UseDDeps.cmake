@@ -7,57 +7,27 @@
 # See LICENSE for details.
 #
 
-macro(add_executable_with_dependencies _target)
-  # extract D source files from arguments
-  foreach(file ${ARGV})
-    if(${file} MATCHES "\\.d$")
-      list(APPEND d_source_files ${file})
-    endif()
-  endforeach()
+set(cmake_d_dir ${CMAKE_CURRENT_LIST_DIR})
 
+function(resolve_dependencies target)
+  get_target_property(d_source_files ${target} SOURCES)
+
+  # extract D source files from arguments
   #message("D files in arguments: ${d_source_files}")
 
-  foreach(file IN LISTS d_source_files)
+  foreach(full_file IN LISTS d_source_files)
+    file(RELATIVE_PATH file "${CMAKE_CURRENT_SOURCE_DIR}" "${full_file}")
     set(source_file "${CMAKE_CURRENT_SOURCE_DIR}/${file}")
-    set(dependency_file "${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/${file}-depend.cmake")
+    set(deps_dir "${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/UseDDeps/")
+    set(dependency_file "${deps_dir}${file}.dep")
+    get_filename_component(deps_source_dir "${dependency_file}" DIRECTORY)
+    file(MAKE_DIRECTORY "${deps_source_dir}")
     set(dependency_files ${dependency_files} ${dependency_file})
 
-    #message("Checking dependencies for ${source_file}")
-    #message("Put into ${dependency_file}")
-    # TODO
-    # better way to get the included directories
-    get_directory_property(include_dirs INCLUDE_DIRECTORIES)
-    set(INCLUDES )
-    foreach(include_dir IN LISTS include_dirs)
-      list(APPEND INCLUDES "${CMAKE_INCLUDE_FLAG_D}${include_dir}")
-    endforeach()
+    add_custom_command(OUTPUT "${CMAKE_BINARY_DIR}/your_gen_file.txt"
+            COMMAND /bin/date > "${CMAKE_BINARY_DIR}/your_gen_file.txt"
+            COMMAND /bin/echo "RUNNING COMMAND")
 
-    execute_process(
-      COMMAND ${CMAKE_COMMAND}
-      -D "CMAKE_D_COMPILER:STRING=${CMAKE_D_COMPILER}"
-      -D "CMAKE_D_FLAGS:STRING=${CMAKE_D_FLAGS}"
-      -D "include_directories:STRING=${INCLUDES}"
-      -D "source_file:STRING=${source_file}"
-      -D "dependency_file:STRING=${dependency_file}"
-      -P "${CMAKE_ROOT}/Modules/dependencies.cmake" # TODO hard coded path
-    )
-
-    # load dependencies from file
-    include(${dependency_file})
-    #message("DEPENDENCIES ${D_DMD_DEPEND}")
-
-    add_custom_command(
-      OUTPUT ${dependency_file}
-      DEPENDS ${D_DMD_DEPEND}
-      COMMAND ${CMAKE_COMMAND}
-      -D "CMAKE_D_COMPILER:STRING=${CMAKE_D_COMPILER}"
-      -D "CMAKE_D_FLAGS:STRING=${CMAKE_D_FLAGS}"
-      -D "include_directories:STRING=${INCLUDES}"
-      -D "source_file:STRING=${source_file}"
-      -D "dependency_file:STRING=${dependency_file}"
-      -P "${CMAKE_ROOT}/Modules/dependencies.cmake" # TODO hard coded path
-      COMMENT "Scanning for dependencies")
+    set_source_files_properties("${full_file}" PROPERTIES COMPILE_FLAGS "-deps=${dependency_file}" OBJECT_DEPENDS "${dependency_file}")
   endforeach()
-
-  add_executable(${ARGV} ${dependency_files})
-endmacro()
+endfunction()

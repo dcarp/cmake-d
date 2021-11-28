@@ -48,7 +48,18 @@ endif()
 
 include(FetchContent)
 
-function(DubProject_Add name)
+function(DubProject_Add name_full)
+	string(FIND "${name_full}" ":" subpackage)
+
+	if(subpackage EQUAL -1)
+		set(name "${name_full}")
+	else()
+		string(REPLACE ":" ";" name_split ${name_full})
+
+		list(GET name_split 0 name)
+		list(GET name_split 1 subpackage)
+	endif()
+
 	if(NOT EXISTS ${DUB_DIRECTORY}/${name}.json)
 		file(DOWNLOAD ${DUB_REGISTRY}/${name}.json ${DUB_DIRECTORY}/${name}.json STATUS status)
 		list(GET status 0 statusCode)
@@ -60,7 +71,7 @@ function(DubProject_Add name)
 	endif()
 
 	if(${ARGC} GREATER 1)
-		execute_process(COMMAND ${DUB_DIRECTORY}/CMakeTmp/DubUrl -p ${name}.json -r ${DUB_REGISTRY} -t ${ARGN}
+		execute_process(COMMAND ${DUB_DIRECTORY}/CMakeTmp/DubUrl -p ${name}.json -r ${DUB_REGISTRY} -t ${ARGV1}
 			WORKING_DIRECTORY ${DUB_DIRECTORY})
 	else()
 		execute_process(COMMAND ${DUB_DIRECTORY}/CMakeTmp/DubUrl -p ${name}.json -r ${DUB_REGISTRY}
@@ -69,10 +80,19 @@ function(DubProject_Add name)
 
 	include(${DUB_DIRECTORY}/${name}.cmake)
 
-	FetchContent_Declare(
-			${name}
-			URL ${DUB_PACKAGE_URL}
-			PATCH_COMMAND ${DUB_DIRECTORY}/CMakeTmp/DubToCMake
-	)
-	FetchContent_MakeAvailable(${name})
+	if(${ARGC} GREATER 2)
+		FetchContent_Declare(
+				${name}_proj
+				URL ${DUB_PACKAGE_URL}
+				PATCH_COMMAND ${DUB_DIRECTORY}/CMakeTmp/DubToCMake -c ${ARGV2} -s ${name_full}
+		)
+	else()
+		FetchContent_Declare(
+				${name}_proj
+				URL ${DUB_PACKAGE_URL}
+				PATCH_COMMAND ${DUB_DIRECTORY}/CMakeTmp/DubToCMake -s ${name_full}
+		)
+	endif()
+	FetchContent_MakeAvailable(${name}_proj)
+
 endfunction()

@@ -1,4 +1,6 @@
 import std.algorithm;
+import std.algorithm.searching;
+import std.array;
 import std.file;
 import std.getopt;
 import std.json;
@@ -6,13 +8,21 @@ import std.stdio;
 import std.string;
 import std.process;
 
+string cmakeFile = "CMakeLists.txt";
+string configuration = "";
+string dubFile = "";
+string subPackage = "";
+
+string[] processedTargets = [];
+
+string[] configurationArg;
+
 int main(string[] args)
 {
-    string cmakeFile = "CMakeLists.txt";
-    string dubFile = "";
-
     getopt(args,
            "package|p", &dubFile,
+           "configuration|c", &configuration,
+           "subpackage|s", &subPackage,
            "output|o", &cmakeFile);
 
     if (dubFile != "")
@@ -20,69 +30,117 @@ int main(string[] args)
         stderr.writeln("-p is deprecated and does not have any effect anymore. Please keep the default package file name.");
     }
 
-    string json = execute(["dub", "describe"]).output;
-    JSONValue dubRoot = parseJSON(json);
+    if (!configuration.empty)
+        configurationArg = ["-c", configuration];
+    else
+        configurationArg = [];
+
+    auto p = pipeProcess(["dub", "describe"] ~ configurationArg ~ [subPackage], Redirect.stdout);
+
+    auto apd = appender!string();
+    foreach (line; p.stdout.byLine)
+    {
+        apd ~= line.idup;
+    }
+
+    string json = apd[];
+    auto dubRoot = parseJSON(json);
     JSONValue root = dubRoot["packages"][0];
-    string target = root["targetName"].str;
 
-    string cmake = q"<
-cmake_minimum_required(VERSION 2.8)
+    auto cmake = appender!string();
 
-project(%1$s D)
+    cmake ~= format!q"<
+# Header
+cmake_minimum_required(VERSION 3.18)
 
-find_file(APP_MAIN_FILE
-    NAMES app.d main.d %1$s/main.d %1$s/app.d
-    PATHS source src NO_DEFAULT_PATH)
+project(%s D)
 
-file(GLOB_RECURSE SRC_FILES %2$-(%s %))
-if(APP_MAIN_FILE)
-    list(REMOVE_ITEM SRC_FILES ${APP_MAIN_FILE})
-endif()
->".format(root["name"].str, root["importPaths"].array.map!((val) => val.str ~ "/*.d"));
+>"(root["name"].str ~ "_proj");
+
+    cmake ~= includePackage(dubRoot, root);
+
+    std.file.write(cmakeFile, cmake[]);
+
+    return 0;
+}
+
+string includePackage(JSONValue dubRoot, JSONValue root) {
+    string target = root["targetName"].str.replace(":", "::");
+    string[] tmp = root["name"].str.split(":");
+    string subTarget = "";
+    if (tmp.length > 1)
+        subTarget = tmp[1];
+
+    if (processedTargets.canFind(target))
+        return "";
+
+    string cmake = format!"# Section: %s\n"(target);
+    bool isInterface = false;
+
+    cmake ~= format!"set(SRC_FILES %-(%s %))"(
+        root["files"].array.map!(
+        (val) {
+            if (val["role"].str == "source" || val["role"].str == "import_") {
+                string ifExists = (subTarget.empty ? "" : subTarget ~ "/") ~ val["path"].str;
+                return exists(ifExists) ? ifExists : "";
+            }
+            else
+                return "";
+        }).filter!(a => a != "").array
+    );
 
     switch ("targetType" in root.object ? root["targetType"].str : "autodetect")
     {
         case "autodetect":
-            cmake ~= q"<
+        cmake ~= q"<
+find_file(APP_MAIN_FILE
+    NAMES app.d main.d %1$s/main.d %1$s/app.d
+    PATHS source src NO_DEFAULT_PATH)
+
+set(SRC_FILES %2$-(%s %))
 if(APP_MAIN_FILE)
+    list(REMOVE_ITEM SRC_FILES ${APP_MAIN_FILE})
     add_executable(%1$s ${SRC_FILES} ${APP_MAIN_FILE})
 else()
     add_library(%1$s ${SRC_FILES})
 endif()
 >".format(target);
-            break;
+        break;
         case "none":
-            break;
+        cmake ~= q"<
+add_library(%s INTERFACE ${SRC_FILES})
+>".format(target);
+        isInterface = true;
+        break;
         case "executable":
-            cmake ~= q"<
+        cmake ~= q"<
 add_executable(%s ${SRC_FILES} ${APP_MAIN_FILE})
 >".format(target);
-            break;
+        break;
         case "library":
-            cmake ~= q"<
+        cmake ~= q"<
 add_library(%s ${SRC_FILES})
 >".format(target);
-            break;
+        break;
         case "sourceLibrary":
-            break;
         case "staticLibrary":
-            cmake ~= q"<
+        cmake ~= q"<
 add_library(%s STATIC ${SRC_FILES})
 >".format(target);
-            break;
+        break;
         case "dynamicLibrary":
-            cmake ~= q"<
+        cmake ~= q"<
 add_library(%s SHARED ${SRC_FILES})
 >".format(target);
-            break;
+        break;
         default:
-            assert(false, "Unknown targetType");
-            break;
+        assert(false, "Unknown targetType");
+        break;
     }
 
     cmake ~= q"<
-target_include_directories(%s PUBLIC %-(%s %))
->".format(target, root["importPaths"].array.map!((val) => val.str));
+target_include_directories(%s %s %-(%s %))
+>".format(target, isInterface ? "INTERFACE" : "PUBLIC", root["importPaths"].array.map!((val) => val.str).array ~ (subTarget.empty ? [] : [subTarget]));
 
     cmake ~= q"<
 install(TARGETS %s
@@ -96,13 +154,46 @@ install(TARGETS %s
         cmake ~= "\ninclude(UseDub)\n";
         foreach (dependency; root["dependencies"].array)
         {
-            string version_ = "~" ~ dubRoot["packages"].array.find!((obj) => obj["name"] == dependency)[0]["version"].str;
-            cmake ~= "DubProject_Add(%s %s)\n".format(dependency, version_);
+            if (dependency.str.startsWith(dubRoot["rootPackage"].str.split(":")[0] ~ ":")) {
+                auto p = pipeProcess(["dub", "describe", dependency.str], Redirect.stdout);
+
+                auto apd = appender!string();
+                foreach (line; p.stdout.byLine)
+                {
+                    apd ~= line.idup;
+                }
+
+                auto newDubRoot = parseJSON(apd[]);
+                auto pkg = newDubRoot["packages"].array.find!((obj) => obj["name"] == dependency)[0];
+
+                cmake = includePackage(newDubRoot, pkg) ~ cmake;
+            } else {
+                try {
+                    auto pkg = dubRoot["packages"].array.find!((obj) => obj["name"] == dependency)[0];
+                    string version_ = pkg["version"].str;
+                    cmake ~= "DubProject_Add(%s %s)\n".format(dependency.str, version_);
+                } catch (Throwable) {
+                    cmake ~= "DubProject_Add(%s)\n".format(dependency.str);
+                }
+            }
         }
-        cmake ~= "\ntarget_link_libraries(%s %-(%s %))\n".format(target, root["dependencies"].array.map!((val) => val.str));
+
+        cmake ~= ("\ntarget_link_libraries(%s " ~ (isInterface ? "INTERFACE" : "") ~ " %-(%s %))\n").format(target, root["dependencies"].array.map!((val) => val.str.replace(":", "::")));
     }
 
-    std.file.write(cmakeFile, cmake);
+    if ("versions" in root.object && root["versions"].array.length > 0) {
+        cmake ~= format!q"<
+target_compile_options(%s PUBLIC "%-(${CMAKE_D_VERSION_FLAG}%s %)")
+>"(target, root["versions"].array.map!(a => a.str));
+    }
 
-    return 0;
+    if (target != root["name"].str)
+        cmake ~= format!q"<
+add_library(%s ALIAS %s)
+>"(root["name"].str.replace(":", "::"), target);
+
+    processedTargets ~= target;
+    cmake ~= format!"# End section %s \n"(target);
+
+    return cmake;
 }
