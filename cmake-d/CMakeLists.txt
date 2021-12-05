@@ -9,7 +9,7 @@
 #
 # See LICENSE for details.
 #
-cmake_minimum_required(VERSION 2.8.1)
+cmake_minimum_required(VERSION 3.20)
 project(cmake-d NONE)
 
 set(MOD_SRCS
@@ -21,7 +21,7 @@ set(MOD_SRCS
 	CMakeDetermineDCompiler.cmake  
 	FindGDCPath.cmake
 	UseDDoc.cmake
-	UseDDeps.cmake
+		UseDDepsMakeWIP.cmake
 	UseDub.cmake
 	dependencies.cmake
 	UseDUnittest.cmake
