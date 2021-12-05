@@ -183,8 +183,14 @@ install(TARGETS %s
 
     if ("versions" in root.object && root["versions"].array.length > 0) {
         cmake ~= format!q"<
-target_compile_options(%s PUBLIC "%-(${CMAKE_D_VERSION_FLAG}%s %)")
+target_compile_versions(%s PUBLIC "%-(%s %)")
 >"(target, root["versions"].array.map!(a => a.str));
+    }
+
+    if ("lflags" in root.object && root["lflags"].array.length > 0) {
+        cmake ~= format!q"<
+target_link_options(%s PUBLIC "%-(${CMAKE_LINKER_FLAG_PREFIX}%s %)")
+>"(target, root["lflags"].array.map!(a => a.str));
     }
 
     if (target != root["name"].str)
