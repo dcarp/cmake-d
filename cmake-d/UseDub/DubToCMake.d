@@ -4,13 +4,14 @@ import std.array;
 import std.file;
 import std.getopt;
 import std.json;
+import std.path;
+import std.process;
 import std.stdio;
 import std.string;
-import std.process;
 
 string cmakeFile = "CMakeLists.txt";
 string configuration = "";
-string dubFile = "";
+string packageName = "";
 string subPackage = "";
 
 string[] processedTargets = [];
@@ -20,32 +21,27 @@ string[] configurationArg;
 int main(string[] args)
 {
     getopt(args,
-           "package|p", &dubFile,
+           "package|p", &packageName,
            "configuration|c", &configuration,
            "subpackage|s", &subPackage,
            "output|o", &cmakeFile);
-
-    if (dubFile != "")
-    {
-        stderr.writeln("-p is deprecated and does not have any effect anymore. Please keep the default package file name.");
-    }
 
     if (!configuration.empty)
         configurationArg = ["-c", configuration];
     else
         configurationArg = [];
 
-    auto p = pipeProcess(["dub", "describe"] ~ configurationArg ~ [subPackage], Redirect.stdout);
-
-    auto apd = appender!string();
-    foreach (line; p.stdout.byLine)
-    {
-        apd ~= line.idup;
+    if (subPackage.canFind(':')) {
+        subPackage = ":" ~ subPackage.split(':')[1];
+    } else {
+        subPackage = "";
     }
 
-    string json = apd[];
-    auto dubRoot = parseJSON(json);
-    JSONValue root = dubRoot["packages"][0];
+    auto packageArgs = [subPackage];
+
+    if (subPackage.canFind(",")) {
+        packageArgs = subPackage[1..$].split(',').map!((s) => ":" ~ s).array;
+    }
 
     auto cmake = appender!string();
 
@@ -55,9 +51,26 @@ cmake_minimum_required(VERSION 3.18)
 
 project(%s D)
 
->"(root["name"].str ~ "_proj");
+>"(packageName ~ "_proj");
 
-    cmake ~= includePackage(dubRoot, root);
+    foreach (pkg; packageArgs) {
+        auto packageArg = pkg;
+
+        auto p = pipeProcess(["dub", "describe"] ~ configurationArg ~ packageArg, Redirect.stdout);
+
+        auto apd = appender!string();
+        foreach (line; p.stdout.byLine)
+        {
+            apd ~= line.idup;
+        }
+
+        string json = apd[];
+        auto dubRoot = parseJSON(json);
+        JSONValue root = dubRoot["packages"][0];
+
+        cmake ~= includePackage(dubRoot, root);
+    }
+
 
     std.file.write(cmakeFile, cmake[]);
 
@@ -77,12 +90,16 @@ string includePackage(JSONValue dubRoot, JSONValue root) {
     string cmake = format!"# Section: %s\n"(target);
     bool isInterface = false;
 
+    string normalizedPath(string path) {
+        return asNormalizedPath(root["path"].str.asRelativePath(getcwd).array ~ "/" ~ path).array;
+    }
+
     cmake ~= format!"set(SRC_FILES %-(%s %))"(
         root["files"].array.map!(
         (val) {
             if (val["role"].str == "source" || val["role"].str == "import_") {
-                string ifExists = (subTarget.empty ? "" : subTarget ~ "/") ~ val["path"].str;
-                return exists(ifExists) ? ifExists : "";
+                string path = normalizedPath(val["path"].str);
+                return exists(path) ? path : "";
             }
             else
                 return "";
@@ -140,7 +157,7 @@ add_library(%s SHARED ${SRC_FILES})
 
     cmake ~= q"<
 target_include_directories(%s %s %-(%s %))
->".format(target, isInterface ? "INTERFACE" : "PUBLIC", root["importPaths"].array.map!((val) => val.str).array ~ (subTarget.empty ? [] : [subTarget]));
+>".format(target, isInterface ? "INTERFACE" : "PUBLIC", root["importPaths"].array.map!((val) => normalizedPath(val.str)).array ~ (subTarget.empty ? [] : [subTarget]));
 
     cmake ~= q"<
 install(TARGETS %s
@@ -154,7 +171,7 @@ install(TARGETS %s
         cmake ~= "\ninclude(UseDub)\n";
         foreach (dependency; root["dependencies"].array)
         {
-            if (dependency.str.startsWith(dubRoot["rootPackage"].str.split(":")[0] ~ ":")) {
+            if (dependency.str.startsWith(dubRoot["rootPackage"].str.split(":")[0])) {
                 auto p = pipeProcess(["dub", "describe", dependency.str], Redirect.stdout);
 
                 auto apd = appender!string();
@@ -178,13 +195,19 @@ install(TARGETS %s
             }
         }
 
-        cmake ~= ("\ntarget_link_libraries(%s " ~ (isInterface ? "INTERFACE" : "") ~ " %-(%s %))\n").format(target, root["dependencies"].array.map!((val) => val.str.replace(":", "::")));
+        cmake ~= ("\ntarget_link_libraries(%s " ~ (isInterface ? "INTERFACE" : "PUBLIC") ~ " %-(%s %))\n").format(target, root["dependencies"].array.map!((val) => val.str.replace(":", "::")));
     }
 
     if ("versions" in root.object && root["versions"].array.length > 0) {
         cmake ~= format!q"<
 target_compile_versions(%s PUBLIC "%-(%s %)")
 >"(target, root["versions"].array.map!(a => a.str));
+    }
+
+    if ("libs" in root.object && root["libs"].array.length > 0) {
+        cmake ~= format!q"<
+target_link_libraries(%s PUBLIC "%-(%s %)")
+>"(target, root["libs"].array.map!(a => a.str));
     }
 
     if ("lflags" in root.object && root["lflags"].array.length > 0) {

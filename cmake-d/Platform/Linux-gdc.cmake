@@ -12,6 +12,7 @@
 # See http://www.cmake.org/HTML/Copyright.html for details
 #
 
+set(CMAKE_D_OUTPUT_EXTENSION .o)
 set(CMAKE_D_DASH_O "-o")
 set(CMAKE_BASE_NAME gdc)
 

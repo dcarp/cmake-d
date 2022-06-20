@@ -84,13 +84,13 @@ function(DubProject_Add name_full)
 		FetchContent_Declare(
 				${name}_proj
 				URL ${DUB_PACKAGE_URL}
-				PATCH_COMMAND ${DUB_DIRECTORY}/CMakeTmp/DubToCMake -c ${ARGV2} -s ${name_full}
+				PATCH_COMMAND ${DUB_DIRECTORY}/CMakeTmp/DubToCMake -c ${ARGV2} -s ${name_full} -p ${name}
 		)
 	else()
 		FetchContent_Declare(
 				${name}_proj
 				URL ${DUB_PACKAGE_URL}
-				PATCH_COMMAND ${DUB_DIRECTORY}/CMakeTmp/DubToCMake -s ${name_full}
+				PATCH_COMMAND ${DUB_DIRECTORY}/CMakeTmp/DubToCMake -s ${name_full} -p ${name}
 		)
 	endif()
 	FetchContent_MakeAvailable(${name}_proj)
