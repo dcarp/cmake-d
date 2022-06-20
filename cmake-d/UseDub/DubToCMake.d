@@ -206,8 +206,8 @@ target_compile_versions(%s PUBLIC "%-(%s %)")
 
     if ("libs" in root.object && root["libs"].array.length > 0) {
         cmake ~= format!q"<
-target_link_libraries(%s PUBLIC "%-(%s %)")
->"(target, root["libs"].array.map!(a => a.str));
+target_link_libraries(%s PUBLIC %-(%s %))
+>"(target, root["libs"].array.map!(a => `"` ~ a.str ~ `"`));
     }
 
     if ("lflags" in root.object && root["lflags"].array.length > 0) {
