@@ -200,7 +200,7 @@ install(TARGETS %s
 
     if ("versions" in root.object && root["versions"].array.length > 0) {
         cmake ~= format!q"<
-target_compile_versions(%s PUBLIC "%-(%s %)")
+target_compile_versions(%s PUBLIC %-(%s %))
 >"(target, root["versions"].array.map!(a => a.str));
     }
 
