@@ -27,7 +27,7 @@ set(CMAKE_BASE_NAME dmd)
 set(CMAKE_STATIC_LIBRARY_CREATE_D_FLAGS "-lib")
 
 set(CMAKE_SHARED_LIBRARY_D_FLAGS "")            # -pic
-set(CMAKE_SHARED_LIBRARY_CREATE_D_FLAGS "-shared -defaultlib=libphobos2.so")       # -shared
+set(CMAKE_SHARED_LIBRARY_CREATE_D_FLAGS "-shared")       # -shared
 set(CMAKE_SHARED_LIBRARY_LINK_D_FLAGS "")         # +s, flag for exe link to use shared lib
 set(CMAKE_SHARED_LIBRARY_RUNTIME_D_FLAG "")       # -rpath
 set(CMAKE_SHARED_LIBRARY_RUNTIME_D_FLAG_SEP "")   # : or empty
