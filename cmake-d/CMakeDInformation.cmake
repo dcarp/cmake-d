@@ -58,7 +58,7 @@ endif()
 
 # if no high specificity file was included, then try a more general one
 if(NOT _INCLUDED_FILE)
-  include(Platform/${CMAKE_SYSTEM_NAME}-${CMAKE_BASE_NAME}
+  include(Platform/${CMAKE_SYSTEM_NAME}-${CMAKE_D_COMPILER_ID}
     OPTIONAL RESULT_VARIABLE _INCLUDED_FILE)
 endif()
 
