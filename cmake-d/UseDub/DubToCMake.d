@@ -91,7 +91,7 @@ string includePackage(JSONValue dubRoot, JSONValue root) {
     bool isInterface = false;
 
     string normalizedPath(string path) {
-        return asNormalizedPath(root["path"].str.asRelativePath(getcwd).array ~ "/" ~ path).array;
+        return cast(string) asNormalizedPath(root["path"].str.asRelativePath(getcwd).array ~ "/" ~ path).array;
     }
 
     cmake ~= format!"set(SRC_FILES %-(%s %))"(
