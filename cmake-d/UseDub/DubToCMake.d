@@ -28,8 +28,9 @@ int main(string[] args)
 
     if (!configuration.empty)
         configurationArg = ["-c", configuration];
-    else
+    else {
         configurationArg = [];
+    }
 
     if (subPackage.canFind(':')) {
         subPackage = ":" ~ subPackage.split(':')[1];
@@ -185,13 +186,10 @@ install(TARGETS %s
 
                 cmake = includePackage(newDubRoot, pkg) ~ cmake;
             } else {
-                try {
-                    auto pkg = dubRoot["packages"].array.find!((obj) => obj["name"] == dependency)[0];
-                    string version_ = pkg["version"].str;
-                    cmake ~= "DubProject_Add(%s %s)\n".format(dependency.str, version_);
-                } catch (Throwable) {
-                    cmake ~= "DubProject_Add(%s)\n".format(dependency.str);
-                }
+                auto pkg = dubRoot["packages"].array.find!((obj) => obj["name"] == dependency)[0];
+                string version_ = pkg["version"].str;
+                string configuration = pkg["configuration"].str;
+                cmake ~= "DubProject_Add(%s %s %s)\n".format(dependency.str, version_, configuration);
             }
         }
 
