@@ -27,7 +27,7 @@ set(CMAKE_BASE_NAME ldc2)
 set(CMAKE_STATIC_LIBRARY_CREATE_D_FLAGS "-lib")
 
 set(CMAKE_SHARED_LIBRARY_D_FLAGS "")            # -pic
-set(CMAKE_SHARED_LIBRARY_CREATE_D_FLAGS "-shared")       # -shared
+set(CMAKE_SHARED_LIBRARY_CREATE_D_FLAGS "-shared -link-defaultlib-shared=false")       # -shared
 set(CMAKE_SHARED_LIBRARY_LINK_D_FLAGS "")         # +s, flag for exe link to use shared lib
 set(CMAKE_SHARED_LIBRARY_RUNTIME_D_FLAG "")       # -rpath
 set(CMAKE_SHARED_LIBRARY_RUNTIME_D_FLAG_SEP "")   # : or empty
@@ -54,10 +54,13 @@ set(CMAKE_FIND_LIBRARY_SUFFIXES ".so" ".a")
 set(CMAKE_D_FLAGS_INIT "")
 # DMD can only produce 32-bit binaries for now
 set(CMAKE_D_LINK_FLAGS "")
-set(CMAKE_D_FLAGS_DEBUG_INIT "-g -d-debug -L-export_dynamic ${DDOC_FLAGS}")
+set(CMAKE_D_FLAGS_DEBUG_INIT "-g --d-debug -L--export-dynamic ${DDOC_FLAGS}")
 set(CMAKE_D_FLAGS_MINSIZEREL_INIT "-Os ${DDOC_FLAGS}")
 set(CMAKE_D_FLAGS_RELEASE_INIT "-O -release ${DDOC_FLAGS}")
-set(CMAKE_D_FLAGS_RELWITHDEBINFO_INIT "-O -g -L-export_dynamic ${DDOC_FLAGS}")
+set(CMAKE_D_FLAGS_RELWITHDEBINFO_INIT "-O -g -L--export-dynamic ${DDOC_FLAGS}")
 # set(CMAKE_D_CREATE_PREPROCESSED_SOURCE "<CMAKE_D_COMPILER> <FLAGS> -E <SOURCE> > <PREPROCESSED_SOURCE>")
 set(CMAKE_D_CREATE_ASSEMBLY_SOURCE "<CMAKE_D_COMPILER> <FLAGS> -S <SOURCE> -of<ASSEMBLY_SOURCE>")
 # set(CMAKE_INCLUDE_SYSTEM_FLAG_D "-isystem ")
+set(CMAKE_D_VERSION_FLAG "--d-version=")
+set(CMAKE_DEPFILE_FLAGS_D "-makedeps=<DEP_FILE>")
+set(CMAKE_LINKER_FLAG_PREFIX "-L=")

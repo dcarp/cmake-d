@@ -58,7 +58,7 @@ endif()
 
 # if no high specificity file was included, then try a more general one
 if(NOT _INCLUDED_FILE)
-  include(Platform/${CMAKE_SYSTEM_NAME}-${CMAKE_BASE_NAME}
+  include(Platform/${CMAKE_SYSTEM_NAME}-${CMAKE_D_COMPILER_ID}
     OPTIONAL RESULT_VARIABLE _INCLUDED_FILE)
 endif()
 
@@ -260,6 +260,7 @@ set(CMAKE_D_ARCHIVE_CREATE "<CMAKE_AR> cr <TARGET> <LINK_FLAGS> <OBJECTS>")
 set(CMAKE_D_ARCHIVE_APPEND "<CMAKE_AR> r  <TARGET> <LINK_FLAGS> <OBJECTS>")
 set(CMAKE_D_ARCHIVE_FINISH "<CMAKE_RANLIB> <TARGET>")
 
+
 # compile a D file into an object file
 if(NOT CMAKE_D_COMPILE_OBJECT)
   if(CMAKE_VERSION VERSION_LESS 3.4.0)
@@ -284,3 +285,19 @@ mark_as_advanced(
   CMAKE_D_FLAGS_RELWITHDEBINFO)
 
 set(CMAKE_D_INFORMATION_LOADED 1)
+
+function(target_compile_versions target)
+    cmake_parse_arguments(CMAKE_D_COMPILE_VERSIONS "" "" "PUBLIC;PRIVATE;INTERFACE" ${ARGN})
+    list(TRANSFORM CMAKE_D_COMPILE_VERSIONS_PUBLIC PREPEND "${CMAKE_D_VERSION_FLAG}")
+    list(TRANSFORM CMAKE_D_COMPILE_VERSIONS_PRIVATE PREPEND "${CMAKE_D_VERSION_FLAG}")
+    list(TRANSFORM CMAKE_D_COMPILE_VERSIONS_INTERFACE PREPEND "${CMAKE_D_VERSION_FLAG}")
+    if (CMAKE_D_COMPILE_VERSIONS_PUBLIC)
+        target_compile_options(${target} PUBLIC "$<$<COMPILE_LANGUAGE:D>:${CMAKE_D_COMPILE_VERSIONS_PUBLIC}>")
+    endif()
+    if (CMAKE_D_COMPILE_VERSIONS_PRIVATE)
+        target_compile_options(${target} PRIVATE "$<$<COMPILE_LANGUAGE:D>:${CMAKE_D_COMPILE_VERSIONS_PRIVATE}>")
+    endif()
+    if (CMAKE_D_COMPILE_VERSIONS_INTERFACE)
+        target_compile_options(${target} INTERFACE "$<$<COMPILE_LANGUAGE:D>:${CMAKE_D_COMPILE_VERSIONS_INTERFACE}>")
+    endif()
+endfunction()

@@ -50,6 +50,7 @@ int main(string[] args)
     string registryUrl = "https://code.dlang.org/packages";
     string registryFile = "";
     string packageVersion = "";
+    string configuration = "";
     bool listVersions;
     string outputPath = ".";
 
